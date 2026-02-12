@@ -1,0 +1,61 @@
+# Credentials & Secrets
+*.docx
+.env
+.env.local
+.env*.local
+MongoDB*.docx
+*Password*
+*password*
+*credentials*
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+*.egg
+*.egg-info/
+dist/
+build/
+venv/
+env/
+ENV/
+.Python
+
+# Data files - scraped content
+*.html
+*.json
+*.csv
+!package.json
+!package-lock.json
+!tsconfig.json
+!next.config.ts
+!eslint.config.mjs
+
+# Logs
+*.log
+update_log.txt
+*.txt
+!requirements.txt
+
+# Dashboard - Next.js
+node_modules/
+.next/
+out/
+.vercel/
+.env*.local
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# OS
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# Batch output
+*.bat.log
