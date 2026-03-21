@@ -50,7 +50,7 @@ def get_mongo_client():
         client.admin.command('ping')
         return client
     except Exception as e:
-        print(f"⚠ MongoDB not connected: {e}")
+        print(f"WARNING: MongoDB not connected: {e}")
         return None
 
 
@@ -82,7 +82,7 @@ def setup_driver():
         driver = webdriver.Chrome(service=service, options=options)
         return driver
     except Exception as e:
-        print(f"✗ Error setting up Chrome: {e}")
+        print(f"ERROR: Error setting up Chrome: {e}")
         raise
 
 
@@ -91,34 +91,34 @@ def scrape_stats_table(url):
     Scrape stats using Selenium
     This gets the data AFTER JavaScript loads it!
     """
-    print(f"🌐 Loading page: {url}")
+    print(f"Loading page: {url}")
     print("=" * 70)
     
     driver = None
     try:
         # Start browser
         driver = setup_driver()
-        print("✓ Browser started")
+        print("OK: Browser started")
         
         # Load page
         driver.get(url)
-        print("✓ Page loaded")
+        print("OK: Page loaded")
         
         # Wait for the stats table to appear
-        print("⏳ Waiting for stats table to load...")
+        print("Waiting for stats table to load...")
         wait = WebDriverWait(driver, 15)
         
         # Wait for table element
         try:
             wait.until(EC.presence_of_element_located((By.TAG_NAME, "table")))
-            print("✓ Table element found")
+            print("OK: Table element found")
         except:
-            print("⚠ Timeout waiting for table")
+            print("WARNING: Timeout waiting for table")
         
         # Give extra time for JavaScript to populate the table
-        print("⏳ Waiting for JavaScript to execute (5 seconds)...")
+        print("Waiting for JavaScript to execute (5 seconds)...")
         time.sleep(5)
-        print("✓ Wait complete")
+        print("OK: Wait complete")
         
         # Get the page source (now with data!)
         html_content = driver.page_source
@@ -127,14 +127,14 @@ def scrape_stats_table(url):
         debug_file = os.path.join(SCRIPT_DIR, 'selenium_page_source.html')
         with open(debug_file, 'w', encoding='utf-8') as f:
             f.write(html_content)
-        print(f"✓ Saved page source to: {debug_file}")
+        print(f"OK: Saved page source to: {debug_file}")
         
         # Extract tables using pandas
-        print("\n📊 Extracting tables...")
+        print("\nExtracting tables...")
         from io import StringIO
         tables = pd.read_html(StringIO(html_content))
         
-        print(f"✓ Found {len(tables)} tables")
+        print(f"OK: Found {len(tables)} tables")
         
         # Find the player stats table (prioritize current roster)
         stats_table = None
@@ -163,36 +163,36 @@ def scrape_stats_table(url):
                 score -= 50
             
             if has_player_col and has_stat_cols and has_data:
-                print(f"   {'⭐' if score > best_table_score else '📊'} Player stats table (score: {score})")
-                print(f"   Dimensions: {table.shape[0]} rows × {table.shape[1]} columns")
+                print(f"   Player stats table (score: {score})")
+                print(f"   Dimensions: {table.shape[0]} rows x {table.shape[1]} columns")
                 
                 # Save this table
                 table_file = os.path.join(SCRIPT_DIR, f'table_{i+1}.csv')
                 table.to_csv(table_file, index=False)
-                print(f"   ✓ Saved to: {table_file}")
+                print(f"   OK: Saved to: {table_file}")
                 
                 # Keep the highest scoring table
                 if score > best_table_score:
                     stats_table = table
                     best_table_score = score
-                    print(f"   ⭐⭐⭐ BEST TABLE SO FAR!")
+                    print(f"   [BEST TABLE SO FAR]")
         
         if stats_table is not None:
             print("\n" + "=" * 70)
-            print("✓ Successfully extracted stats table!")
+            print("OK: Successfully extracted stats table!")
             print("=" * 70)
             return stats_table
         else:
             print("\n" + "=" * 70)
-            print("⚠ No player stats table found with data")
+            print("WARNING: No player stats table found with data")
             print("=" * 70)
             print("\nAll tables summary:")
             for i, table in enumerate(tables):
-                print(f"  Table {i+1}: {table.shape[0]} rows × {table.shape[1]} cols")
+                print(f"  Table {i+1}: {table.shape[0]} rows x {table.shape[1]} cols")
             return None
         
     except Exception as e:
-        print(f"\n✗ Error: {e}")
+        print(f"\nERROR: {e}")
         import traceback
         traceback.print_exc()
         return None
@@ -200,7 +200,7 @@ def scrape_stats_table(url):
     finally:
         if driver:
             driver.quit()
-            print("\n✓ Browser closed")
+            print("\nOK: Browser closed")
 
 
 def format_for_mongodb(df):
@@ -252,18 +252,18 @@ def format_for_mongodb(df):
 def update_database(stats):
     """Insert/update stats in MongoDB"""
     if not stats:
-        print("\n✗ No stats to insert")
+        print("\nERROR: No stats to insert")
         return
     
     client = get_mongo_client()
     if not client:
-        print("\n⚠ MongoDB not available - stats saved to JSON only")
+        print("\nWARNING: MongoDB not available - stats saved to JSON only")
         return
     
     db = client[DB_NAME]
     stats_collection = db['player_stats']
     
-    print(f"\n💾 Updating database...")
+    print(f"\nUpdating database...")
     print("=" * 70)
     
     updated = 0
@@ -286,11 +286,11 @@ def update_database(stats):
             elif result.upserted_id:
                 inserted += 1
         except Exception as e:
-            print(f"  ⚠ Error: {record['player_name']} - {e}")
+            print(f"  WARNING: {record['player_name']} - {e}")
     
-    print(f"✓ Inserted: {inserted}")
-    print(f"✓ Updated: {updated}")
-    print(f"✓ Total in database: {stats_collection.count_documents({})}")
+    print(f"OK: Inserted: {inserted}")
+    print(f"OK: Updated: {updated}")
+    print(f"OK: Total in database: {stats_collection.count_documents({})}")
 
 
 def main():
@@ -316,15 +316,15 @@ def main():
             json_file = os.path.join(SCRIPT_DIR, 'extracted_all_stats.json')
             with open(json_file, 'w') as f:
                 json.dump(records, f, indent=2, default=str)
-            print(f"\n✓ Saved {len(records)} prospect records to: {json_file}")
+            print(f"\nOK: Saved {len(records)} prospect records to: {json_file}")
 
             print("\n" + "=" * 70)
-            print("✓✓✓ SUCCESS! Prospects scraped! ✓✓✓")
+            print("SUCCESS: Prospects scraped!")
             print("=" * 70)
         else:
-            print("\n⚠ Could not format data for MongoDB")
+            print("\nWARNING: Could not format data for MongoDB")
     else:
-        print("\n✗ Failed to scrape prospects table")
+        print("\nERROR: Failed to scrape prospects table")
         print("\nCheck the selenium_page_source.html file to see what was loaded")
 
 

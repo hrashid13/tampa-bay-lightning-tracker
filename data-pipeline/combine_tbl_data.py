@@ -43,20 +43,43 @@ print(f"✓ Loaded {len(prospects_data)} records from prospects file")
 
 print("\nStep 2: Loading NHL stats from Selenium CSV...")
 
-nhl_file = os.path.join(SCRIPT_DIR, 'table_1.csv')
+# The scraper saves the best table as nhl_best_table.csv, falling back to scanning table_N.csv files
+nhl_file = None
 
-if not os.path.exists(nhl_file):
-    print(f"✗ File not found: {nhl_file}")
+# First preference: explicit best table file
+if os.path.exists(os.path.join(SCRIPT_DIR, 'nhl_best_table.csv')):
+    nhl_file = os.path.join(SCRIPT_DIR, 'nhl_best_table.csv')
+else:
+    # Scan all table_N.csv files and pick the one with a 'Skater' column
+    import glob
+    table_files = sorted(glob.glob(os.path.join(SCRIPT_DIR, 'table_*.csv')))
+    for f in table_files:
+        try:
+            test_df = pd.read_csv(f)
+            if 'Skater' in test_df.columns:
+                nhl_file = f
+                print(f"  Found Skater column in: {os.path.basename(f)}")
+                break
+        except:
+            continue
+
+if not nhl_file:
+    print(f"✗ Could not find NHL stats CSV with 'Skater' column")
+    print(f"  Tried: nhl_best_table.csv and all table_N.csv files")
     exit(1)
+
+print(f"✓ Using file: {os.path.basename(nhl_file)}")
 
 # Read CSV
 nhl_df = pd.read_csv(nhl_file)
 
-# Remove the "NHL, NHL, NHL..." header row
-nhl_df = nhl_df[nhl_df['Skater'] != 'NHL']
+# Remove the "NHL, NHL, NHL..." header row if present
+if 'Skater' in nhl_df.columns:
+    nhl_df = nhl_df[nhl_df['Skater'] != 'NHL']
 
 # Only use the FIRST set of stat columns (ignore .1 duplicates)
 columns_to_keep = ['#', 'N', 'Skater', 'GP', 'G', 'A', 'TP', 'PIM', '+/-']
+columns_to_keep = [c for c in columns_to_keep if c in nhl_df.columns]
 nhl_df = nhl_df[columns_to_keep]
 
 print(f"✓ Loaded {len(nhl_df)} NHL players from CSV")

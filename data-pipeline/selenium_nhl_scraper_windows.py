@@ -159,6 +159,10 @@ def scrape_stats_table(url):
                 # Don't break - check all tables
         
         if stats_table is not None:
+            # Save the best table with a consistent filename for combine_tbl_data.py
+            best_file = os.path.join(SCRIPT_DIR, 'nhl_best_table.csv')
+            stats_table.to_csv(best_file, index=False)
+            print(f" Saved best table to: {best_file}")
             print("\n" + "=" * 70)
             print(" Successfully extracted stats table!")
             print("=" * 70)
