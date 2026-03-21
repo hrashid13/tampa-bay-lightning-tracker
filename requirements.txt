@@ -1,0 +1,9 @@
+selenium==4.15.2
+webdriver-manager==4.0.1
+pymongo==4.6.1
+python-dotenv==1.0.0
+pandas==2.1.4
+numpy==1.26.2
+requests==2.31.0
+beautifulsoup4==4.12.2
+python-dateutil==2.8.2
