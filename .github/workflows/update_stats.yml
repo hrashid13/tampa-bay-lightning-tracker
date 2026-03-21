@@ -10,6 +10,9 @@ on:
 jobs:
   update-stats:
     runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: data-pipeline
 
     steps:
       # 1. Check out your repo
