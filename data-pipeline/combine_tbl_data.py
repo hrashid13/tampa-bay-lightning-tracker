@@ -47,15 +47,13 @@ import glob
 
 # Find the right CSV - prefer nhl_best_table.csv, then scan table_N.csv files
 nhl_file = None
-name_col = None
-
 if os.path.exists(os.path.join(SCRIPT_DIR, 'nhl_best_table.csv')):
     nhl_file = os.path.join(SCRIPT_DIR, 'nhl_best_table.csv')
 else:
     for f in sorted(glob.glob(os.path.join(SCRIPT_DIR, 'table_*.csv'))):
         try:
             test_df = pd.read_csv(f)
-            for candidate in ['Skater', 'Player', 'SKATER', 'Name']:
+            for candidate in ['Skater', 'Player', 'SKATER', 'Name', 'player', 'name']:
                 if candidate in test_df.columns:
                     nhl_file = f
                     break
@@ -69,11 +67,11 @@ if not nhl_file:
     exit(1)
 
 print(f"OK: Using file: {os.path.basename(nhl_file)}")
-
 nhl_df = pd.read_csv(nhl_file)
 
 # Detect player name column
-for candidate in ['Skater', 'Player', 'SKATER', 'Name']:
+name_col = None
+for candidate in ['Skater', 'Player', 'SKATER', 'Name', 'player', 'name']:
     if candidate in nhl_df.columns:
         name_col = candidate
         break
@@ -84,11 +82,15 @@ if not name_col:
 
 print(f"OK: Player name column is '{name_col}'")
 
-# Remove any duplicate header rows
+# Remove duplicate header rows if present
 nhl_df = nhl_df[nhl_df[name_col] != 'NHL']
 nhl_df = nhl_df[nhl_df[name_col] != name_col]
 
 # Keep only relevant columns that exist
+# PTS is the same as TP on some scrapers
+if 'PTS' in nhl_df.columns and 'TP' not in nhl_df.columns:
+    nhl_df = nhl_df.rename(columns={'PTS': 'TP'})
+
 wanted_cols = [name_col, 'GP', 'G', 'A', 'TP', 'PIM', '+/-']
 nhl_df = nhl_df[[c for c in wanted_cols if c in nhl_df.columns]]
 
