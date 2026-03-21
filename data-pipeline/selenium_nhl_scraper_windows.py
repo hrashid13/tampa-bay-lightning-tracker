@@ -22,7 +22,7 @@ from selenium.webdriver.chrome.options import Options
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
-from selenium.webdriver.chrome.service import Service as ChromeService
+from webdriver_manager.chrome import ChromeDriverManager
 from pymongo import MongoClient
 import json
 import os
@@ -50,35 +50,27 @@ def get_mongo_client():
 
 
 def setup_driver():
-    """Setup Chrome - works on both Windows (local) and Linux (GitHub Actions)"""
+    """Setup Chrome with automatic driver management"""
     print("Setting up Chrome driver...")
     
     options = Options()
-    options.add_argument('--headless')
+    options.add_argument('--headless')  # Run without opening browser window
     options.add_argument('--no-sandbox')
     options.add_argument('--disable-dev-shm-usage')
     options.add_argument('--disable-gpu')
     options.add_argument('user-agent=Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36')
     
     try:
-        import platform
-        if platform.system() == 'Linux':
-            # GitHub Actions / Linux: use system-installed chromedriver
-            import shutil
-            chromedriver_path = shutil.which('chromedriver') or '/usr/bin/chromedriver'
-            chrome_path = shutil.which('chromium-browser') or shutil.which('chromium') or '/usr/bin/chromium-browser'
-            options.binary_location = chrome_path
-            service = ChromeService(executable_path=chromedriver_path)
-        else:
-            # Windows local: use webdriver-manager
-            from webdriver_manager.chrome import ChromeDriverManager
-            from selenium.webdriver.chrome.service import Service
-            service = Service(ChromeDriverManager().install())
-        
+        # Auto-install ChromeDriver
+        service = Service(ChromeDriverManager().install())
         driver = webdriver.Chrome(service=service, options=options)
         return driver
     except Exception as e:
         print(f" Error setting up Chrome: {e}")
+        print("\nTroubleshooting:")
+        print("1. Make sure Google Chrome is installed")
+        print("2. Check your internet connection (needs to download ChromeDriver)")
+        print("3. Try running as administrator")
         raise
 
 
@@ -134,35 +126,36 @@ def scrape_stats_table(url):
         
         # Find the player stats table
         stats_table = None
+        best_score = -999
         for i, table in enumerate(tables):
             cols = list(table.columns)
             rows = len(table)
             
             print(f"\nTable {i+1}: {rows} rows, columns: {cols[:10]}")
             
-            # Look for player stats columns
-            has_player_col = any(col in ['#', 'N', 'SKATER', 'Player'] for col in cols)
             has_stat_cols = any(col in ['GP', 'G', 'A', 'TP'] for col in cols)
-            has_data = rows > 5
-            
-            if has_player_col and has_stat_cols and has_data:
-                print(f"    THIS LOOKS LIKE THE PLAYER STATS TABLE!")
-                print(f"   Dimensions: {table.shape[0]} rows × {table.shape[1]} columns")
-                
+            if not has_stat_cols or rows < 6:
+                continue
+
+            # Score the table - higher is better
+            score = 0
+            if 'Skater' in cols:   score += 200  # Current roster column name
+            if 'N' in cols:        score += 50   # Jersey number column
+            if '+/-' in cols:      score += 50   # NHL-style stat
+            if rows > 20:          score += 100  # Full roster has 25-33 players
+            elif rows < 15:        score -= 100  # Sidebar widgets have ~10 rows
+
+            print(f"   Score: {score}, rows: {rows}")
+
+            if score > best_score:
+                best_score = score
                 stats_table = table
-                
                 # Save this table
                 table_file = os.path.join(SCRIPT_DIR, f'table_{i+1}.csv')
                 table.to_csv(table_file, index=False)
-                print(f"    Saved to: {table_file}")
-                
-                # Don't break - check all tables
+                print(f"   [BEST TABLE] Saved to: {table_file}")
         
         if stats_table is not None:
-            # Save the best table with a consistent filename for combine_tbl_data.py
-            best_file = os.path.join(SCRIPT_DIR, 'nhl_best_table.csv')
-            stats_table.to_csv(best_file, index=False)
-            print(f" Saved best table to: {best_file}")
             print("\n" + "=" * 70)
             print(" Successfully extracted stats table!")
             print("=" * 70)

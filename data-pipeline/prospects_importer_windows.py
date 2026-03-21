@@ -18,24 +18,19 @@ import pandas as pd
 from datetime import datetime
 from selenium import webdriver
 from selenium.webdriver.chrome.service import Service
-from selenium.webdriver.chrome.service import Service as ChromeService
 from selenium.webdriver.chrome.options import Options
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
+from webdriver_manager.chrome import ChromeDriverManager
 from pymongo import MongoClient
-from dotenv import load_dotenv
 import json
 import os
 
-load_dotenv()
-
 # Configuration
-PROSPECTS_URL = "https://www.eliteprospects.com/team/75/tampa-bay-lightning/2025-2026?tab=prospects"
-MONGODB_URI = os.getenv('MONGODB_URI')
-if not MONGODB_URI:
-    raise ValueError("MONGODB_URI not found in environment variables")
-DB_NAME = 'lightning_tracker'
+STATS_URL = "https://www.eliteprospects.com/team/75/tampa-bay-lightning/2025-2026?tab=stats"
+MONGODB_URI = 'mongodb://localhost:27017/'
+DB_NAME = 'hockey_stats'
 
 # Get script directory for saving files
 SCRIPT_DIR = os.path.dirname(os.path.abspath(__file__))
@@ -50,39 +45,32 @@ def get_mongo_client():
         client.admin.command('ping')
         return client
     except Exception as e:
-        print(f"WARNING: MongoDB not connected: {e}")
+        print(f"⚠ MongoDB not connected: {e}")
         return None
 
 
 def setup_driver():
-    """Setup Chrome - works on both Windows (local) and Linux (GitHub Actions)"""
+    """Setup Chrome with automatic driver management"""
     print("Setting up Chrome driver...")
     
     options = Options()
-    options.add_argument('--headless')
+    options.add_argument('--headless')  # Run without opening browser window
     options.add_argument('--no-sandbox')
     options.add_argument('--disable-dev-shm-usage')
     options.add_argument('--disable-gpu')
     options.add_argument('user-agent=Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36')
     
     try:
-        import platform
-        if platform.system() == 'Linux':
-            # GitHub Actions / Linux: use system-installed chromedriver
-            import shutil
-            chromedriver_path = shutil.which('chromedriver') or '/usr/bin/chromedriver'
-            chrome_path = shutil.which('chromium-browser') or shutil.which('chromium') or '/usr/bin/chromium-browser'
-            options.binary_location = chrome_path
-            service = ChromeService(executable_path=chromedriver_path)
-        else:
-            # Windows local: use webdriver-manager
-            from webdriver_manager.chrome import ChromeDriverManager
-            service = Service(ChromeDriverManager().install())
-        
+        # Auto-install ChromeDriver
+        service = Service(ChromeDriverManager().install())
         driver = webdriver.Chrome(service=service, options=options)
         return driver
     except Exception as e:
-        print(f"ERROR: Error setting up Chrome: {e}")
+        print(f"✗ Error setting up Chrome: {e}")
+        print("\nTroubleshooting:")
+        print("1. Make sure Google Chrome is installed")
+        print("2. Check your internet connection (needs to download ChromeDriver)")
+        print("3. Try running as administrator")
         raise
 
 
@@ -91,34 +79,34 @@ def scrape_stats_table(url):
     Scrape stats using Selenium
     This gets the data AFTER JavaScript loads it!
     """
-    print(f"Loading page: {url}")
+    print(f"🌐 Loading page: {url}")
     print("=" * 70)
     
     driver = None
     try:
         # Start browser
         driver = setup_driver()
-        print("OK: Browser started")
+        print("✓ Browser started")
         
         # Load page
         driver.get(url)
-        print("OK: Page loaded")
+        print("✓ Page loaded")
         
         # Wait for the stats table to appear
-        print("Waiting for stats table to load...")
+        print("⏳ Waiting for stats table to load...")
         wait = WebDriverWait(driver, 15)
         
         # Wait for table element
         try:
             wait.until(EC.presence_of_element_located((By.TAG_NAME, "table")))
-            print("OK: Table element found")
+            print("✓ Table element found")
         except:
-            print("WARNING: Timeout waiting for table")
+            print("⚠ Timeout waiting for table")
         
         # Give extra time for JavaScript to populate the table
-        print("Waiting for JavaScript to execute (5 seconds)...")
+        print("⏳ Waiting for JavaScript to execute (5 seconds)...")
         time.sleep(5)
-        print("OK: Wait complete")
+        print("✓ Wait complete")
         
         # Get the page source (now with data!)
         html_content = driver.page_source
@@ -127,18 +115,18 @@ def scrape_stats_table(url):
         debug_file = os.path.join(SCRIPT_DIR, 'selenium_page_source.html')
         with open(debug_file, 'w', encoding='utf-8') as f:
             f.write(html_content)
-        print(f"OK: Saved page source to: {debug_file}")
+        print(f"✓ Saved page source to: {debug_file}")
         
         # Extract tables using pandas
-        print("\nExtracting tables...")
+        print("\n📊 Extracting tables...")
         from io import StringIO
         tables = pd.read_html(StringIO(html_content))
         
-        print(f"OK: Found {len(tables)} tables")
+        print(f"✓ Found {len(tables)} tables")
         
         # Find the player stats table (prioritize current roster)
         stats_table = None
-        best_table_score = 0
+        best_table_score = -999
         
         for i, table in enumerate(tables):
             cols = list(table.columns)
@@ -146,53 +134,52 @@ def scrape_stats_table(url):
             
             print(f"\nTable {i+1}: {rows} rows, columns: {cols[:10]}")
             
-            # Look for player stats columns
-            has_player_col = any(col in ['#', 'N', 'SKATER', 'Skater', 'Player'] for col in cols)
-            has_stat_cols = any(col in ['GP', 'G', 'A', 'TP'] for col in cols)
-            has_data = rows > 5
-            
-            # Score the table (higher = more likely to be current roster)
+            # Must have stat columns - biographical tables don't count
+            has_stat_cols = any(col in ['GP', 'G', 'A', 'TP', 'PTS'] for col in cols)
+            if not has_stat_cols or rows < 6:
+                continue
+
+            # Score the table
             score = 0
-            if 'Skater' in cols:  # Current roster uses "Skater"
-                score += 100
-            if 'N' in cols:  # Current roster has jersey numbers column
-                score += 50
-            if rows > 20:  # Current roster has ~25-30 players
-                score += 30
-            if rows < 15:  # Former players table is smaller
-                score -= 50
-            
-            if has_player_col and has_stat_cols and has_data:
-                print(f"   Player stats table (score: {score})")
-                print(f"   Dimensions: {table.shape[0]} rows x {table.shape[1]} columns")
-                
-                # Save this table
-                table_file = os.path.join(SCRIPT_DIR, f'table_{i+1}.csv')
-                table.to_csv(table_file, index=False)
-                print(f"   OK: Saved to: {table_file}")
-                
-                # Keep the highest scoring table
-                if score > best_table_score:
-                    stats_table = table
-                    best_table_score = score
-                    print(f"   [BEST TABLE SO FAR]")
+            if 'Player' in cols:   score += 100  # Prospects page uses 'Player'
+            if 'GP' in cols:       score += 100  # Must have games played
+            if 'G' in cols:        score += 50
+            if 'A' in cols:        score += 50
+            if rows > 20:          score += 100  # Full prospect list has 25-30 rows
+            elif rows < 15:        score -= 100  # Sidebar widgets are small
+            # Penalize biographical tables
+            if 'Born' in cols or 'HT' in cols or 'WT' in cols:
+                score -= 500
+
+            print(f"   Player stats table (score: {score})")
+            print(f"   Dimensions: {table.shape[0]} rows x {table.shape[1]} columns")
+
+            # Save this table
+            table_file = os.path.join(SCRIPT_DIR, f'table_{i+1}.csv')
+            table.to_csv(table_file, index=False)
+            print(f"   OK: Saved to: {table_file}")
+
+            if score > best_table_score:
+                stats_table = table
+                best_table_score = score
+                print(f"   [BEST TABLE SO FAR]")
         
         if stats_table is not None:
             print("\n" + "=" * 70)
-            print("OK: Successfully extracted stats table!")
+            print("✓ Successfully extracted stats table!")
             print("=" * 70)
             return stats_table
         else:
             print("\n" + "=" * 70)
-            print("WARNING: No player stats table found with data")
+            print("⚠ No player stats table found with data")
             print("=" * 70)
             print("\nAll tables summary:")
             for i, table in enumerate(tables):
-                print(f"  Table {i+1}: {table.shape[0]} rows x {table.shape[1]} cols")
+                print(f"  Table {i+1}: {table.shape[0]} rows × {table.shape[1]} cols")
             return None
         
     except Exception as e:
-        print(f"\nERROR: {e}")
+        print(f"\n✗ Error: {e}")
         import traceback
         traceback.print_exc()
         return None
@@ -200,7 +187,7 @@ def scrape_stats_table(url):
     finally:
         if driver:
             driver.quit()
-            print("\nOK: Browser closed")
+            print("\n✓ Browser closed")
 
 
 def format_for_mongodb(df):
@@ -252,18 +239,18 @@ def format_for_mongodb(df):
 def update_database(stats):
     """Insert/update stats in MongoDB"""
     if not stats:
-        print("\nERROR: No stats to insert")
+        print("\n✗ No stats to insert")
         return
     
     client = get_mongo_client()
     if not client:
-        print("\nWARNING: MongoDB not available - stats saved to JSON only")
+        print("\n⚠ MongoDB not available - stats saved to JSON only")
         return
     
     db = client[DB_NAME]
     stats_collection = db['player_stats']
     
-    print(f"\nUpdating database...")
+    print(f"\n💾 Updating database...")
     print("=" * 70)
     
     updated = 0
@@ -286,45 +273,71 @@ def update_database(stats):
             elif result.upserted_id:
                 inserted += 1
         except Exception as e:
-            print(f"  WARNING: {record['player_name']} - {e}")
+            print(f"  ⚠ Error: {record['player_name']} - {e}")
     
-    print(f"OK: Inserted: {inserted}")
-    print(f"OK: Updated: {updated}")
-    print(f"OK: Total in database: {stats_collection.count_documents({})}")
+    print(f"✓ Inserted: {inserted}")
+    print(f"✓ Updated: {updated}")
+    print(f"✓ Total in database: {stats_collection.count_documents({})}")
 
 
 def main():
     """Main scraping process"""
     print("=" * 70)
-    print("Elite Prospects - Prospects Scraper (In The System)")
+    print("Elite Prospects NHL Stats Scraper (Windows + Selenium)")
     print("=" * 70)
     print()
     
-    # Scrape the prospects table
-    df = scrape_stats_table(PROSPECTS_URL)
+    # Scrape the stats table
+    df = scrape_stats_table(STATS_URL)
     
     if df is not None:
+        # Save to CSV
+        csv_file = os.path.join(SCRIPT_DIR, 'selenium_nhl_stats.csv')
+        df.to_csv(csv_file, index=False)
+        print(f"\n✓ Saved raw table to: {csv_file}")
+        
+        # Show preview
+        print("\n📋 Preview of scraped data:")
+        print("=" * 70)
+        print(df.head(10).to_string())
+        
         # Format for MongoDB
         records = format_for_mongodb(df)
         
         if records:
-            # Mark all as prospects
-            for r in records:
-                r['is_prospect'] = True
-
-            # Save to extracted_all_stats.json (required by combine_tbl_data.py)
-            json_file = os.path.join(SCRIPT_DIR, 'extracted_all_stats.json')
+            # Save to JSON
+            json_file = os.path.join(SCRIPT_DIR, 'selenium_nhl_stats.json')
             with open(json_file, 'w') as f:
                 json.dump(records, f, indent=2, default=str)
-            print(f"\nOK: Saved {len(records)} prospect records to: {json_file}")
-
-            print("\n" + "=" * 70)
-            print("SUCCESS: Prospects scraped!")
+            print(f"\n✓ Saved {len(records)} player records to: {json_file}")
+            
+            # Show sample
+            print("\n📊 Sample player record:")
             print("=" * 70)
+            print(json.dumps(records[0], indent=2, default=str))
+            
+            print("\n" + "=" * 70)
+            print("✓✓✓ SUCCESS! NHL Stats Extracted with Selenium! ✓✓✓")
+            print("=" * 70)
+            print(f"\nExtracted {len(records)} NHL players with detailed stats")
+            print("\nFiles created:")
+            print(f"  - {csv_file}")
+            print(f"  - {json_file}")
+            
+            print("\n" + "=" * 70)
+            print("Next Steps:")
+            print("=" * 70)
+            print("1. Review the CSV and JSON files")
+            print("2. Start MongoDB (if not running)")
+            print("3. Uncomment update_database() in the script")
+            print("4. Run again to insert into MongoDB")
+            
+            # Uncomment this line when ready to insert into MongoDB:
+            # update_database(records)
         else:
-            print("\nWARNING: Could not format data for MongoDB")
+            print("\n⚠ Could not format data for MongoDB")
     else:
-        print("\nERROR: Failed to scrape prospects table")
+        print("\n✗ Failed to scrape stats table")
         print("\nCheck the selenium_page_source.html file to see what was loaded")
 
 
