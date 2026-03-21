@@ -25,9 +25,11 @@ jobs:
         with:
           python-version: '3.11'
 
-      # 3. Install Chrome (for Selenium headless)
-      - name: Install Chrome
-        uses: browser-actions/setup-chrome@v1
+      # 3. Install Chrome + ChromeDriver (matched versions, bypasses webdriver-manager issues)
+      - name: Install Chrome and ChromeDriver
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y chromium-browser chromium-chromedriver
 
       # 4. Install Python dependencies
       - name: Install dependencies

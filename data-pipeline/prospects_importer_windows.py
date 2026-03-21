@@ -18,19 +18,24 @@ import pandas as pd
 from datetime import datetime
 from selenium import webdriver
 from selenium.webdriver.chrome.service import Service
+from selenium.webdriver.chrome.service import Service as ChromeService
 from selenium.webdriver.chrome.options import Options
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
-from webdriver_manager.chrome import ChromeDriverManager
 from pymongo import MongoClient
+from dotenv import load_dotenv
 import json
 import os
 
+load_dotenv()
+
 # Configuration
-STATS_URL = "https://www.eliteprospects.com/team/75/tampa-bay-lightning/2025-2026?tab=stats"
-MONGODB_URI = 'mongodb://localhost:27017/'
-DB_NAME = 'hockey_stats'
+PROSPECTS_URL = "https://www.eliteprospects.com/team/75/tampa-bay-lightning/2025-2026?tab=prospects"
+MONGODB_URI = os.getenv('MONGODB_URI')
+if not MONGODB_URI:
+    raise ValueError("MONGODB_URI not found in environment variables")
+DB_NAME = 'lightning_tracker'
 
 # Get script directory for saving files
 SCRIPT_DIR = os.path.dirname(os.path.abspath(__file__))
@@ -50,27 +55,34 @@ def get_mongo_client():
 
 
 def setup_driver():
-    """Setup Chrome with automatic driver management"""
+    """Setup Chrome - works on both Windows (local) and Linux (GitHub Actions)"""
     print("Setting up Chrome driver...")
     
     options = Options()
-    options.add_argument('--headless')  # Run without opening browser window
+    options.add_argument('--headless')
     options.add_argument('--no-sandbox')
     options.add_argument('--disable-dev-shm-usage')
     options.add_argument('--disable-gpu')
     options.add_argument('user-agent=Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36')
     
     try:
-        # Auto-install ChromeDriver
-        service = Service(ChromeDriverManager().install())
+        import platform
+        if platform.system() == 'Linux':
+            # GitHub Actions / Linux: use system-installed chromedriver
+            import shutil
+            chromedriver_path = shutil.which('chromedriver') or '/usr/bin/chromedriver'
+            chrome_path = shutil.which('chromium-browser') or shutil.which('chromium') or '/usr/bin/chromium-browser'
+            options.binary_location = chrome_path
+            service = ChromeService(executable_path=chromedriver_path)
+        else:
+            # Windows local: use webdriver-manager
+            from webdriver_manager.chrome import ChromeDriverManager
+            service = Service(ChromeDriverManager().install())
+        
         driver = webdriver.Chrome(service=service, options=options)
         return driver
     except Exception as e:
         print(f"✗ Error setting up Chrome: {e}")
-        print("\nTroubleshooting:")
-        print("1. Make sure Google Chrome is installed")
-        print("2. Check your internet connection (needs to download ChromeDriver)")
-        print("3. Try running as administrator")
         raise
 
 
@@ -284,61 +296,35 @@ def update_database(stats):
 def main():
     """Main scraping process"""
     print("=" * 70)
-    print("Elite Prospects NHL Stats Scraper (Windows + Selenium)")
+    print("Elite Prospects - Prospects Scraper (In The System)")
     print("=" * 70)
     print()
     
-    # Scrape the stats table
-    df = scrape_stats_table(STATS_URL)
+    # Scrape the prospects table
+    df = scrape_stats_table(PROSPECTS_URL)
     
     if df is not None:
-        # Save to CSV
-        csv_file = os.path.join(SCRIPT_DIR, 'selenium_nhl_stats.csv')
-        df.to_csv(csv_file, index=False)
-        print(f"\n✓ Saved raw table to: {csv_file}")
-        
-        # Show preview
-        print("\n📋 Preview of scraped data:")
-        print("=" * 70)
-        print(df.head(10).to_string())
-        
         # Format for MongoDB
         records = format_for_mongodb(df)
         
         if records:
-            # Save to JSON
-            json_file = os.path.join(SCRIPT_DIR, 'selenium_nhl_stats.json')
+            # Mark all as prospects
+            for r in records:
+                r['is_prospect'] = True
+
+            # Save to extracted_all_stats.json (required by combine_tbl_data.py)
+            json_file = os.path.join(SCRIPT_DIR, 'extracted_all_stats.json')
             with open(json_file, 'w') as f:
                 json.dump(records, f, indent=2, default=str)
-            print(f"\n✓ Saved {len(records)} player records to: {json_file}")
-            
-            # Show sample
-            print("\n📊 Sample player record:")
-            print("=" * 70)
-            print(json.dumps(records[0], indent=2, default=str))
-            
+            print(f"\n✓ Saved {len(records)} prospect records to: {json_file}")
+
             print("\n" + "=" * 70)
-            print("✓✓✓ SUCCESS! NHL Stats Extracted with Selenium! ✓✓✓")
+            print("✓✓✓ SUCCESS! Prospects scraped! ✓✓✓")
             print("=" * 70)
-            print(f"\nExtracted {len(records)} NHL players with detailed stats")
-            print("\nFiles created:")
-            print(f"  - {csv_file}")
-            print(f"  - {json_file}")
-            
-            print("\n" + "=" * 70)
-            print("Next Steps:")
-            print("=" * 70)
-            print("1. Review the CSV and JSON files")
-            print("2. Start MongoDB (if not running)")
-            print("3. Uncomment update_database() in the script")
-            print("4. Run again to insert into MongoDB")
-            
-            # Uncomment this line when ready to insert into MongoDB:
-            # update_database(records)
         else:
             print("\n⚠ Could not format data for MongoDB")
     else:
-        print("\n✗ Failed to scrape stats table")
+        print("\n✗ Failed to scrape prospects table")
         print("\nCheck the selenium_page_source.html file to see what was loaded")
 
 

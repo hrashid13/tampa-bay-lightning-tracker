@@ -22,20 +22,15 @@ from selenium.webdriver.chrome.options import Options
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
-from webdriver_manager.chrome import ChromeDriverManager
+from selenium.webdriver.chrome.service import Service as ChromeService
 from pymongo import MongoClient
-from dotenv import load_dotenv
 import json
 import os
 
-load_dotenv()
-
 # Configuration
 STATS_URL = "https://www.eliteprospects.com/team/75/tampa-bay-lightning/2025-2026?tab=stats"
-MONGODB_URI = os.getenv('MONGODB_URI')
-if not MONGODB_URI:
-    raise ValueError("MONGODB_URI not found in environment variables")
-DB_NAME = 'lightning_tracker'
+MONGODB_URI = 'MONGODB_URI'
+DB_NAME = 'hockey_stats'
 
 # Get script directory for saving files
 SCRIPT_DIR = os.path.dirname(os.path.abspath(__file__))
@@ -55,27 +50,35 @@ def get_mongo_client():
 
 
 def setup_driver():
-    """Setup Chrome with automatic driver management"""
+    """Setup Chrome - works on both Windows (local) and Linux (GitHub Actions)"""
     print("Setting up Chrome driver...")
     
     options = Options()
-    options.add_argument('--headless')  # Run without opening browser window
+    options.add_argument('--headless')
     options.add_argument('--no-sandbox')
     options.add_argument('--disable-dev-shm-usage')
     options.add_argument('--disable-gpu')
     options.add_argument('user-agent=Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36')
     
     try:
-        # Auto-install ChromeDriver
-        service = Service(ChromeDriverManager().install())
+        import platform
+        if platform.system() == 'Linux':
+            # GitHub Actions / Linux: use system-installed chromedriver
+            import shutil
+            chromedriver_path = shutil.which('chromedriver') or '/usr/bin/chromedriver'
+            chrome_path = shutil.which('chromium-browser') or shutil.which('chromium') or '/usr/bin/chromium-browser'
+            options.binary_location = chrome_path
+            service = ChromeService(executable_path=chromedriver_path)
+        else:
+            # Windows local: use webdriver-manager
+            from webdriver_manager.chrome import ChromeDriverManager
+            from selenium.webdriver.chrome.service import Service
+            service = Service(ChromeDriverManager().install())
+        
         driver = webdriver.Chrome(service=service, options=options)
         return driver
     except Exception as e:
         print(f" Error setting up Chrome: {e}")
-        print("\nTroubleshooting:")
-        print("1. Make sure Google Chrome is installed")
-        print("2. Check your internet connection (needs to download ChromeDriver)")
-        print("3. Try running as administrator")
         raise
 
 
@@ -323,8 +326,8 @@ def main():
             print("3. Uncomment update_database() in the script")
             print("4. Run again to insert into MongoDB")
             
-            # Push to MongoDB Atlas
-            update_database(records)
+            # Uncomment this line when ready to insert into MongoDB:
+            # update_database(records)
         else:
             print("\n Could not format data for MongoDB")
     else:
