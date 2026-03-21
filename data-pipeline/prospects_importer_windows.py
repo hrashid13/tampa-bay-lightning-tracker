@@ -1,7 +1,8 @@
 #!/usr/bin/env python3
 """
-Elite Prospects - TBL Prospects Scraper
-========================================
+Elite Prospects - TBL Prospects Scraper (In The System)
+=========================================================
+Scrapes the Tampa Bay Lightning prospects page.
 Cross-platform: runs on Windows (local) and Linux (GitHub Actions)
 """
 
@@ -16,7 +17,6 @@ from selenium.webdriver.chrome.options import Options
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
-from pymongo import MongoClient
 from dotenv import load_dotenv
 import json
 import os
@@ -24,7 +24,7 @@ import os
 load_dotenv()
 
 # Configuration
-PROSPECTS_URL = "https://www.eliteprospects.com/team/75/tampa-bay-lightning/2025-2026?tab=prospects"
+PROSPECTS_URL = "https://www.eliteprospects.com/team/75/tampa-bay-lightning/in-the-system"
 MONGODB_URI = os.getenv('MONGODB_URI')
 if not MONGODB_URI:
     raise ValueError("MONGODB_URI not found in environment variables")
@@ -66,245 +66,191 @@ def setup_driver():
 
 
 def scrape_stats_table(url):
-    """
-    Scrape stats using Selenium
-    This gets the data AFTER JavaScript loads it!
-    """
-    print(f"🌐 Loading page: {url}")
+    """Scrape the prospects stats table"""
+    print(f"Loading page: {url}")
     print("=" * 70)
-    
+
     driver = None
     try:
-        # Start browser
         driver = setup_driver()
-        print("✓ Browser started")
-        
-        # Load page
+        print("OK: Browser started")
+
         driver.get(url)
-        print("✓ Page loaded")
-        
-        # Wait for the stats table to appear
-        print("⏳ Waiting for stats table to load...")
+        print("OK: Page loaded")
+
+        print("Waiting for stats table to load...")
         wait = WebDriverWait(driver, 15)
-        
-        # Wait for table element
         try:
             wait.until(EC.presence_of_element_located((By.TAG_NAME, "table")))
-            print("✓ Table element found")
+            print("OK: Table element found")
         except:
-            print("⚠ Timeout waiting for table")
-        
-        # Give extra time for JavaScript to populate the table
-        print("⏳ Waiting for JavaScript to execute (5 seconds)...")
+            print("WARNING: Timeout waiting for table")
+
+        print("Waiting for JavaScript to execute (5 seconds)...")
         time.sleep(5)
-        print("✓ Wait complete")
-        
-        # Get the page source (now with data!)
+        print("OK: Wait complete")
+
         html_content = driver.page_source
-        
-        # Save the HTML for debugging
-        debug_file = os.path.join(SCRIPT_DIR, 'selenium_page_source.html')
+
+        debug_file = os.path.join(SCRIPT_DIR, 'prospects_page_source.html')
         with open(debug_file, 'w', encoding='utf-8') as f:
             f.write(html_content)
-        print(f"✓ Saved page source to: {debug_file}")
-        
-        # Extract tables using pandas
-        print("\n📊 Extracting tables...")
+        print(f"OK: Saved page source to: {debug_file}")
+
+        print("\nExtracting tables...")
         from io import StringIO
         tables = pd.read_html(StringIO(html_content))
-        
-        print(f"✓ Found {len(tables)} tables")
-        
-        # Find the player stats table (prioritize current roster)
+        print(f"OK: Found {len(tables)} tables")
+
         stats_table = None
-        best_table_score = -999
-        
+        best_score = -9999
+
         for i, table in enumerate(tables):
             cols = list(table.columns)
             rows = len(table)
-            
+
             print(f"\nTable {i+1}: {rows} rows, columns: {cols[:10]}")
-            
-            # Must have stat columns - biographical tables don't count
-            has_stat_cols = any(col in ['GP', 'G', 'A', 'TP', 'PTS'] for col in cols)
-            if not has_stat_cols or rows < 6:
+
+            has_gp = 'GP' in cols
+            has_scoring = any(col in cols for col in ['G', 'A', 'TP', 'PTS'])
+            if not has_gp or not has_scoring or rows < 6:
                 continue
 
-            # Score the table
             score = 0
-            if 'Player' in cols:   score += 100
-            if 'GP' in cols:       score += 100
-            if 'G' in cols:        score += 50
-            if 'A' in cols:        score += 50
-            if rows > 20:          score += 100
-            elif rows < 15:        score -= 100
 
-            # Penalize biographical tables
-            if any(col in cols for col in ['Born', 'HT', 'WT', 'Birthplace']):
-                score -= 500
-
-            # Penalize team standings / season history tables
-            if any(col in cols for col in ['W', 'L', 'season', 'league']):
-                score -= 500
-
-            # Must have a player name column to be useful
-            has_name_col = any(col in cols for col in ['Player', 'Skater', 'player', 'Name', 'name'])
+            has_name_col = any(col in cols for col in ['Skater', 'Player', 'player', 'Name', 'N'])
             if not has_name_col:
-                score -= 500
+                score -= 1000
 
-            print(f"   Player stats table (score: {score})")
-            print(f"   Dimensions: {table.shape[0]} rows x {table.shape[1]} columns")
+            if 'Skater' in cols:  score += 300
+            if 'N' in cols:       score += 100
+            if '+/-' in cols:     score += 100
+            if 'PPG' in cols:     score += 100
+            if 'PIM' in cols:     score += 50
+            if rows > 20:         score += 200
 
-            # Save this table
-            table_file = os.path.join(SCRIPT_DIR, f'table_{i+1}.csv')
+            if any(col in cols for col in ['Born', 'HT', 'WT', 'Birthplace']):
+                score -= 1000
+            if any(col in cols for col in ['W', 'L']):
+                score -= 1000
+            if 'season' in cols or 'league' in cols:
+                score -= 1000
+            if rows < 15:
+                score -= 200
+
+            print(f"   Score: {score}, rows: {rows}")
+
+            table_file = os.path.join(SCRIPT_DIR, f'prospects_table_{i+1}.csv')
             table.to_csv(table_file, index=False)
-            print(f"   OK: Saved to: {table_file}")
+            print(f"   Saved to: {table_file}")
 
-            if score > best_table_score:
+            if score > best_score:
+                best_score = score
                 stats_table = table
-                best_table_score = score
                 print(f"   [BEST TABLE SO FAR]")
-        
+
         if stats_table is not None:
             print("\n" + "=" * 70)
-            print("✓ Successfully extracted stats table!")
+            print("OK: Successfully extracted prospects table!")
+            print(f"OK: Best score was {best_score}")
             print("=" * 70)
             return stats_table
         else:
-            print("\n" + "=" * 70)
-            print("⚠ No player stats table found with data")
-            print("=" * 70)
-            print("\nAll tables summary:")
-            for i, table in enumerate(tables):
-                print(f"  Table {i+1}: {table.shape[0]} rows × {table.shape[1]} cols")
+            print("\nERROR: No suitable prospects table found")
             return None
-        
+
     except Exception as e:
-        print(f"\n✗ Error: {e}")
+        print(f"\nERROR: {e}")
         import traceback
         traceback.print_exc()
         return None
-        
+
     finally:
         if driver:
             driver.quit()
-            print("\n✓ Browser closed")
+            print("\nOK: Browser closed")
 
 
-def format_for_mongodb(df):
-    """Convert DataFrame to MongoDB format"""
+def format_records(df):
+    """Convert DataFrame to list of prospect records"""
     if df is None or df.empty:
         return []
-    
+
+    cols = list(df.columns)
+    print(f"OK: Table columns: {cols}")
+
+    name_col = None
+    for candidate in ['Skater', 'Player', 'player', 'Name', 'name', 'N']:
+        if candidate in cols:
+            name_col = candidate
+            break
+
+    if not name_col:
+        print(f"ERROR: No player name column found. Available: {cols}")
+        return []
+
+    print(f"OK: Using '{name_col}' as player name column")
+
+    league_col = next((c for c in ['League', 'league', 'LEAGUE'] if c in cols), None)
+    team_col = next((c for c in ['Team', 'team', 'TEAM'] if c in cols), None)
+
     records = []
-    
     for idx, row in df.iterrows():
-        # Extract player name (in different possible columns)
-        player_name = None
-        for col in ['SKATER', 'Player', 'N', 'Name']:
-            if col in row and not pd.isna(row[col]):
-                player_name = str(row[col]).strip()
-                if player_name and len(player_name) > 2:
-                    break
-        
-        if not player_name:
+        player_name = str(row[name_col]).strip()
+        if not player_name or player_name == 'nan' or len(player_name) < 3:
             continue
-        
-        # Build stats dict
+
         stats = {}
-        stat_cols = ['GP', 'G', 'A', 'TP', 'PIM', '+/-', 'PPG', 'SHG', 'GWG', 'SOG', 'SH%']
-        
-        for col in stat_cols:
+        for col in ['GP', 'G', 'A', 'TP', 'PTS', 'PIM', '+/-', 'PPG']:
             if col in row and not pd.isna(row[col]):
                 stats[col] = str(row[col])
-        
+
+        if 'PTS' in stats and 'TP' not in stats:
+            stats['TP'] = stats.pop('PTS')
+
         if not stats:
             continue
-        
+
+        def safe_str(val):
+            return str(val).strip() if val and not pd.isna(val) else 'unknown'
+
+        league = safe_str(row[league_col]) if league_col else 'unknown'
+        team = safe_str(row[team_col]) if team_col else 'unknown'
+
         record = {
             'player_name': player_name,
             'season': '2025-2026',
-            'team_name': 'Tampa Bay Lightning',
-            'league_name': 'NHL',
+            'team_name': team,
+            'league_name': league,
             'stats': stats,
+            'is_prospect': True,
             'is_playoff': False,
-            'source': 'selenium_scraper',
-            'updated_at': datetime.utcnow()
+            'source': 'prospects_scraper',
+            'updated_at': datetime.utcnow().isoformat()
         }
-        
+
         records.append(record)
-    
+
     return records
-
-
-def update_database(stats):
-    """Insert/update stats in MongoDB"""
-    if not stats:
-        print("\n✗ No stats to insert")
-        return
-    
-    client = get_mongo_client()
-    if not client:
-        print("\n⚠ MongoDB not available - stats saved to JSON only")
-        return
-    
-    db = client[DB_NAME]
-    stats_collection = db['player_stats']
-    
-    print(f"\n💾 Updating database...")
-    print("=" * 70)
-    
-    updated = 0
-    inserted = 0
-    
-    for record in stats:
-        try:
-            result = stats_collection.replace_one(
-                {
-                    'player_name': record['player_name'],
-                    'team_name': record['team_name'],
-                    'season': record['season']
-                },
-                record,
-                upsert=True
-            )
-            
-            if result.modified_count > 0:
-                updated += 1
-            elif result.upserted_id:
-                inserted += 1
-        except Exception as e:
-            print(f"  ⚠ Error: {record['player_name']} - {e}")
-    
-    print(f"✓ Inserted: {inserted}")
-    print(f"✓ Updated: {updated}")
-    print(f"✓ Total in database: {stats_collection.count_documents({})}")
 
 
 def main():
     """Main scraping process"""
     print("=" * 70)
-    print("Elite Prospects - TBL Prospects Scraper")
+    print("Elite Prospects - TBL Prospects Scraper (In The System)")
     print("=" * 70)
     print()
 
     df = scrape_stats_table(PROSPECTS_URL)
 
     if df is not None:
-        records = format_for_mongodb(df)
+        records = format_records(df)
 
         if records:
-            # Mark all as prospects
-            for r in records:
-                r['is_prospect'] = True
-                r['league_name'] = r.get('league_name', 'prospect')
-
-            # Save as extracted_all_stats.json (required by combine_tbl_data.py)
             json_file = os.path.join(SCRIPT_DIR, 'extracted_all_stats.json')
             with open(json_file, 'w') as f:
                 json.dump(records, f, indent=2, default=str)
             print(f"\nOK: Saved {len(records)} prospect records to: {json_file}")
-
             print("\n" + "=" * 70)
             print("SUCCESS: Prospects scraped!")
             print("=" * 70)
