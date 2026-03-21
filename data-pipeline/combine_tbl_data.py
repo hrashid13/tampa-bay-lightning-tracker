@@ -43,39 +43,59 @@ print(f"✓ Loaded {len(prospects_data)} records from prospects file")
 
 print("\nStep 2: Loading NHL stats from Selenium CSV...")
 
-nhl_file = os.path.join(SCRIPT_DIR, 'table_1.csv')
+import glob
 
-if not os.path.exists(nhl_file):
-    print(f"✗ File not found: {nhl_file}")
+# Find the right CSV - prefer nhl_best_table.csv, then scan table_N.csv files
+nhl_file = None
+name_col = None
+
+if os.path.exists(os.path.join(SCRIPT_DIR, 'nhl_best_table.csv')):
+    nhl_file = os.path.join(SCRIPT_DIR, 'nhl_best_table.csv')
+else:
+    for f in sorted(glob.glob(os.path.join(SCRIPT_DIR, 'table_*.csv'))):
+        try:
+            test_df = pd.read_csv(f)
+            for candidate in ['Skater', 'Player', 'SKATER', 'Name']:
+                if candidate in test_df.columns:
+                    nhl_file = f
+                    break
+            if nhl_file:
+                break
+        except:
+            continue
+
+if not nhl_file:
+    print("ERROR: Could not find NHL stats CSV")
     exit(1)
 
-# Read CSV
+print(f"OK: Using file: {os.path.basename(nhl_file)}")
+
 nhl_df = pd.read_csv(nhl_file)
 
-# Remove the "NHL, NHL, NHL..." header row
-nhl_df = nhl_df[nhl_df['Skater'] != 'NHL']
-
-# Only use the FIRST set of stat columns (ignore .1 duplicates)
-columns_to_keep = ['#', 'N', 'Skater', 'GP', 'G', 'A', 'TP', 'PIM', '+/-']
-nhl_df = nhl_df[columns_to_keep]
-
-print(f"✓ Loaded {len(nhl_df)} NHL players from CSV")
-
-
-print("\nStep 3: Converting NHL data...")
-
-# Detect which column holds player names
-name_col = None
-for candidate in ['Skater', 'Player', 'SKATER', 'Name', 'N']:
+# Detect player name column
+for candidate in ['Skater', 'Player', 'SKATER', 'Name']:
     if candidate in nhl_df.columns:
         name_col = candidate
         break
 
 if not name_col:
-    print(f"ERROR: Could not find player name column. Columns available: {list(nhl_df.columns)}")
+    print(f"ERROR: Could not find player name column. Available: {list(nhl_df.columns)}")
     exit(1)
 
-print(f"OK: Using '{name_col}' as player name column")
+print(f"OK: Player name column is '{name_col}'")
+
+# Remove any duplicate header rows
+nhl_df = nhl_df[nhl_df[name_col] != 'NHL']
+nhl_df = nhl_df[nhl_df[name_col] != name_col]
+
+# Keep only relevant columns that exist
+wanted_cols = [name_col, 'GP', 'G', 'A', 'TP', 'PIM', '+/-']
+nhl_df = nhl_df[[c for c in wanted_cols if c in nhl_df.columns]]
+
+print(f"OK: Loaded {len(nhl_df)} NHL players from CSV")
+
+
+print("\nStep 3: Converting NHL data...")
 
 nhl_records = []
 
