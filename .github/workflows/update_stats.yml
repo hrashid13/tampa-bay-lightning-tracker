@@ -1,0 +1,60 @@
+name: Nightly TBL Stats Update
+
+on:
+  schedule:
+    # Runs at 7:00 AM UTC = 2:00 AM ET (EST) / 3:00 AM ET (EDT)
+    - cron: '0 7 * * *'
+  workflow_dispatch:
+    # Allows you to manually trigger it from GitHub's Actions tab anytime
+
+jobs:
+  update-stats:
+    runs-on: ubuntu-latest
+
+    steps:
+      # 1. Check out your repo
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      # 2. Install Python
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      # 3. Install Chrome (for Selenium headless)
+      - name: Install Chrome
+        uses: browser-actions/setup-chrome@v1
+
+      # 4. Install Python dependencies
+      - name: Install dependencies
+        run: pip install -r requirements.txt
+
+      # 5. Run the NHL scraper
+      - name: Scrape NHL stats
+        env:
+          MONGODB_URI: ${{ secrets.MONGODB_URI }}
+        run: python selenium_nhl_scraper_windows.py
+
+      # 6. Run the prospects scraper
+      - name: Scrape prospect stats
+        env:
+          MONGODB_URI: ${{ secrets.MONGODB_URI }}
+        run: python prospects_importer_windows.py
+
+      # 7. Combine data and push to MongoDB Atlas
+      - name: Combine and upload to MongoDB
+        env:
+          MONGODB_URI: ${{ secrets.MONGODB_URI }}
+        run: python combine_tbl_data.py
+
+      # 8. Upload logs as artifacts so you can inspect them
+      - name: Upload update log
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: update-log-${{ github.run_number }}
+          path: |
+            update_log.txt
+            selenium_page_source.html
+          retention-days: 7

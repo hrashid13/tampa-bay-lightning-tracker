@@ -24,13 +24,18 @@ from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 from webdriver_manager.chrome import ChromeDriverManager
 from pymongo import MongoClient
+from dotenv import load_dotenv
 import json
 import os
 
+load_dotenv()
+
 # Configuration
 STATS_URL = "https://www.eliteprospects.com/team/75/tampa-bay-lightning/2025-2026?tab=stats"
-MONGODB_URI = 'mongodb://localhost:27017/'
-DB_NAME = 'hockey_stats'
+MONGODB_URI = os.getenv('MONGODB_URI')
+if not MONGODB_URI:
+    raise ValueError("MONGODB_URI not found in environment variables")
+DB_NAME = 'lightning_tracker'
 
 # Get script directory for saving files
 SCRIPT_DIR = os.path.dirname(os.path.abspath(__file__))
@@ -318,8 +323,8 @@ def main():
             print("3. Uncomment update_database() in the script")
             print("4. Run again to insert into MongoDB")
             
-            # Uncomment this line when ready to insert into MongoDB:
-            # update_database(records)
+            # Push to MongoDB Atlas
+            update_database(records)
         else:
             print("\n Could not format data for MongoDB")
     else:
