@@ -1,6 +1,6 @@
 # Tampa Bay Lightning Player Statistics Tracker
 
-A full-stack sports analytics application that automatically tracks and visualizes Tampa Bay Lightning hockey players across multiple leagues including NHL, AHL, ECHL, OHL, European leagues, and NCAA.
+A full-stack sports analytics application that automatically tracks and visualizes Tampa Bay Lightning hockey players across multiple leagues including NHL, AHL, ECHL, OHL, European leagues, and NCAA
 
 ## Project Overview
 
