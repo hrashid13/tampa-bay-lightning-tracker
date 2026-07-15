@@ -4,7 +4,7 @@ A full-stack sports analytics application that automatically tracks and visualiz
 
 ## Project Overview
 
-This application serves as a comprehensive player tracking system for the Tampa Bay Lightning organization, monitoring both NHL roster players and prospects. The system combines automated web scraping, cloud database storage, and an interactive dashboard to provide real-time statistics and performance metrics.
+This application serves as a comprehensive player tracking system for the Tampa Bay Lightning organization, monitoring both NHL roster players and prospects. The system combines automated web scraping, cloud database storage, and an interactive dashboard to provide real-time statistics and performance metrics
 
 [![Live Dashboard](https://img.shields.io/badge/Live-Dashboard-blue)](https://tbl-dashboard-hfrashid-5328-hesham-rashids-projects.vercel.app/)
 
