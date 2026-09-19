@@ -1,36 +1,20 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import TopScorers from '../components/TopScorers';
 import LeagueBreakdown from '../components/LeagueBreakdown';
 import PlayerTable from '../components/PlayerTable';
+import data from '../data/players.json';
+
+// Data is baked in at build time (exported nightly from MongoDB)
+const stats = data.players;
 
 export default function Dashboard() {
-  const [stats, setStats] = useState([]);
-  const [loading, setLoading] = useState(true);
-  
   // Site-wide filter states
   const [search, setSearch] = useState('');
   const [filterLeague, setFilterLeague] = useState('All');
   const [filterPlayerType, setFilterPlayerType] = useState('All');
   const [sortBy, setSortBy] = useState('TP');
-
-  useEffect(() => {
-    fetch('/api/stats')
-      .then(res => res.json())
-      .then(data => {
-        setStats(data.stats);
-        setLoading(false);
-      });
-  }, []);
-
-  if (loading) {
-    return (
-      <div className="min-h-screen bg-gray-900 flex items-center justify-center">
-        <div className="text-white text-2xl">Loading...</div>
-      </div>
-    );
-  }
 
   // Get unique leagues for dropdown
   const leagues = ['All', ...new Set(stats.map(p => p.league_name))];
@@ -56,7 +40,7 @@ export default function Dashboard() {
       <header className="bg-blue-600 p-6 shadow-lg">
         <h1 className="text-4xl font-bold"> Tampa Bay Lightning Stats</h1>
         <p className="text-blue-100 mt-2">
-          Season 2025-2026 • {stats.length} Players
+          Season 2025-2026 • {stats.length} Players • Updated {data.generatedAt.slice(0, 10)}
         </p>
       </header>
 
