@@ -1,52 +1,48 @@
-import { PieChart, Pie, Cell, ResponsiveContainer, Legend, Tooltip } from 'recharts';
+import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Cell, LabelList } from 'recharts';
+import ChartCard, { AXIS, GRID, HOVER_CURSOR, EmptyState, TooltipBox, FamilyLegend } from './ChartCard';
+import { leagueColor, leagueFamily } from '../lib/players';
 
 export default function LeagueBreakdown({ stats }) {
-  const leagueCounts = {};
-  
-  stats.forEach(player => {
-    const league = player.league_name;
-    leagueCounts[league] = (leagueCounts[league] || 0) + 1;
+  const counts = {};
+  stats.forEach(p => {
+    counts[p.league] = (counts[p.league] || 0) + 1;
   });
 
-  const data = Object.entries(leagueCounts).map(([name, value]) => ({
-    name,
-    value
-  }));
-
-  const COLORS = ['#3B82F6', '#10B981', '#F59E0B', '#EF4444', '#8B5CF6', '#EC4899', '#14B8A6', '#F97316'];
+  const data = Object.entries(counts)
+    .map(([name, value]) => ({ name, value, family: leagueFamily(name) }))
+    .sort((a, b) => b.value - a.value || a.name.localeCompare(b.name));
 
   return (
-    <div className="bg-gray-800 rounded-lg p-6 shadow-lg">
-      <h2 className="text-2xl font-bold mb-4"> Players by League</h2>
-      
+    <ChartCard title="Players by League" subtitle={`${stats.length} players across ${data.length} leagues`}>
       {data.length === 0 ? (
-        <div className="text-gray-400 text-center py-8">
-          No data available for selected filters
-        </div>
+        <EmptyState />
       ) : (
-        <ResponsiveContainer width="100%" height={300}>
-          <PieChart>
-            <Pie
-              data={data}
-              cx="50%"
-              cy="50%"
-              labelLine={false}
-              label={entry => `${entry.name}: ${entry.value}`}
-              outerRadius={80}
-              fill="#8884d8"
-              dataKey="value"
-            >
-              {data.map((entry, index) => (
-                <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
-              ))}
-            </Pie>
-            <Tooltip 
-              contentStyle={{ backgroundColor: '#1F2937', border: 'none' }}
-            />
-            <Legend />
-          </PieChart>
-        </ResponsiveContainer>
+        <>
+          <ResponsiveContainer width="100%" height={data.length * 30 + 30}>
+            <BarChart data={data} layout="vertical" margin={{ top: 0, right: 36, left: 0, bottom: 0 }} barCategoryGap={4}>
+              <CartesianGrid {...GRID} horizontal={false} />
+              <XAxis type="number" allowDecimals={false} {...AXIS} />
+              <YAxis type="category" dataKey="name" width={60} {...AXIS} tickLine={false} />
+              <Tooltip
+                cursor={HOVER_CURSOR}
+                content={({ active, payload }) => {
+                  if (!active || !payload?.length) return null;
+                  const d = payload[0].payload;
+                  const pct = Math.round((d.value / stats.length) * 100);
+                  return (
+                    <TooltipBox title={d.name} color={leagueColor(d.name)} rows={[['Players', d.value], ['Share', `${pct}%`]]} />
+                  );
+                }}
+              />
+              <Bar dataKey="value" radius={[0, 4, 4, 0]} maxBarSize={22}>
+                {data.map(d => <Cell key={d.name} fill={leagueColor(d.name)} />)}
+                <LabelList dataKey="value" position="right" fill="#c3c2b7" fontSize={12} />
+              </Bar>
+            </BarChart>
+          </ResponsiveContainer>
+          <FamilyLegend families={data.map(d => d.family)} />
+        </>
       )}
-    </div>
+    </ChartCard>
   );
 }

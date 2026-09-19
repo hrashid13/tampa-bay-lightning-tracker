@@ -1,61 +1,51 @@
-import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
+import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Cell, LabelList } from 'recharts';
+import ChartCard, { AXIS, GRID, HOVER_CURSOR, EmptyState, TooltipBox, FamilyLegend } from './ChartCard';
+import { STAT_LABELS, FAMILY_COLORS, shortName } from '../lib/players';
 
-export default function TopScorers({ stats, sortBy = 'TP' }) {
-  // Use the sortBy from site-wide filter
-  const statKey = sortBy;
-  
-  const topScorers = stats
-    .filter(p => p.stats?.[statKey])
-    .sort((a, b) => parseInt(b.stats[statKey]) - parseInt(a.stats[statKey]))
+export default function TopScorers({ stats, rankBy = 'tp' }) {
+  const label = STAT_LABELS[rankBy] || 'Points';
+
+  // Only players who have actually registered the stat
+  const data = stats
+    .filter(p => p[rankBy] > 0)
+    .sort((a, b) => b[rankBy] - a[rankBy])
     .slice(0, 10)
-    .map(p => ({
-      name: p.player_name.split(' ').slice(0, 2).join(' '),
-      value: parseInt(p.stats[statKey]),
-      league: p.league_name
-    }));
-
-  // Dynamic label based on what we're sorting by
-  const labels = {
-    TP: 'Points',
-    G: 'Goals',
-    A: 'Assists',
-    GP: 'Games'
-  };
+    .map(p => ({ ...p, label: shortName(p.name), value: p[rankBy] }));
 
   return (
-    <div className="bg-gray-800 rounded-lg p-6 shadow-lg">
-      <h2 className="text-2xl font-bold mb-4">
-         Top 10 by {labels[statKey] || 'Points'}
-      </h2>
-      
-      {topScorers.length === 0 ? (
-        <div className="text-gray-400 text-center py-8">
-          No data available for selected filters
-        </div>
+    <ChartCard title={`Top 10 by ${label}`} subtitle="Players with zero are hidden">
+      {data.length === 0 ? (
+        <EmptyState />
       ) : (
-        <ResponsiveContainer width="100%" height={300}>
-          <BarChart data={topScorers}>
-            <CartesianGrid strokeDasharray="3 3" stroke="#374151" />
-            <XAxis 
-              dataKey="name" 
-              angle={-45} 
-              textAnchor="end" 
-              height={100} 
-              stroke="#9CA3AF" 
-            />
-            <YAxis stroke="#9CA3AF" />
-            <Tooltip 
-              contentStyle={{ backgroundColor: '#1F2937', border: 'none' }}
-              labelStyle={{ color: '#F3F4F6' }}
-              formatter={(value, name, props) => [
-                `${value} ${labels[statKey]}`,
-                props.payload.league
-              ]}
-            />
-            <Bar dataKey="value" fill="#3B82F6" />
-          </BarChart>
-        </ResponsiveContainer>
+        <>
+          <ResponsiveContainer width="100%" height={data.length * 34 + 30}>
+            <BarChart data={data} layout="vertical" margin={{ top: 0, right: 36, left: 0, bottom: 0 }} barCategoryGap={4}>
+              <CartesianGrid {...GRID} horizontal={false} />
+              <XAxis type="number" allowDecimals={false} {...AXIS} />
+              <YAxis type="category" dataKey="label" width={130} {...AXIS} tickLine={false} />
+              <Tooltip
+                cursor={HOVER_CURSOR}
+                content={({ active, payload }) => {
+                  if (!active || !payload?.length) return null;
+                  const p = payload[0].payload;
+                  return (
+                    <TooltipBox
+                      title={p.name}
+                      color={FAMILY_COLORS[p.family]}
+                      rows={[['Team', `${p.team} (${p.league})`], [label, p.value], ['GP', p.gp ?? '-']]}
+                    />
+                  );
+                }}
+              />
+              <Bar dataKey="value" radius={[0, 4, 4, 0]} maxBarSize={24}>
+                {data.map(p => <Cell key={p.id} fill={FAMILY_COLORS[p.family]} />)}
+                <LabelList dataKey="value" position="right" fill="#c3c2b7" fontSize={12} />
+              </Bar>
+            </BarChart>
+          </ResponsiveContainer>
+          <FamilyLegend families={data.map(p => p.family)} />
+        </>
       )}
-    </div>
+    </ChartCard>
   );
 }
