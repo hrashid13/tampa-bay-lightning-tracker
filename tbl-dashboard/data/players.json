@@ -1,0 +1,1472 @@
+{
+  "generatedAt": "2026-09-19T14:42:26.527153+00:00",
+  "players": [
+    {
+      "_id": "6aae76f080f25ba7a6fba509",
+      "player_name": "Daniil Pylenkov (D)",
+      "season": "2025-2026",
+      "team_name": "Dynamo Moskva",
+      "league_name": "KHL",
+      "stats": {
+        "GP": "7",
+        "G": "1",
+        "A": "2",
+        "TP": "3",
+        "PIM": "0",
+        "+/-": "1",
+        "PPG": "0.43"
+      },
+      "is_prospect": true,
+      "is_playoff": false,
+      "source": "prospects_scraper",
+      "updated_at": "2026-09-19T11:50:07.332021"
+    },
+    {
+      "_id": "6aae76f080f25ba7a6fba50a",
+      "player_name": "Benjamin Rautiainen (C/LW)",
+      "season": "2025-2026",
+      "team_name": "Tappara",
+      "league_name": "Liiga",
+      "stats": {
+        "GP": "1",
+        "G": "1",
+        "A": "0",
+        "TP": "1",
+        "PIM": "2",
+        "+/-": "0",
+        "PPG": "1.00"
+      },
+      "is_prospect": true,
+      "is_playoff": false,
+      "source": "prospects_scraper",
+      "updated_at": "2026-09-19T11:50:07.332129"
+    },
+    {
+      "_id": "6aae76f080f25ba7a6fba50b",
+      "player_name": "Roman Luttsev (C)",
+      "season": "2025-2026",
+      "team_name": "Molot Perm",
+      "league_name": "VHL",
+      "stats": {
+        "GP": "5",
+        "G": "1",
+        "A": "0",
+        "TP": "1",
+        "PIM": "0",
+        "+/-": "2",
+        "PPG": "0.20"
+      },
+      "is_prospect": true,
+      "is_playoff": false,
+      "source": "prospects_scraper",
+      "updated_at": "2026-09-19T11:50:07.332236"
+    },
+    {
+      "_id": "6aae76f080f25ba7a6fba50c",
+      "player_name": "Mikhail Shalagin (LW)",
+      "season": "2025-2026",
+      "team_name": "HK Norilsk",
+      "league_name": "VHL",
+      "stats": {
+        "GP": "1",
+        "G": "0",
+        "A": "0",
+        "TP": "0",
+        "PIM": "0",
+        "+/-": "-1",
+        "PPG": "0.00"
+      },
+      "is_prospect": true,
+      "is_playoff": false,
+      "source": "prospects_scraper",
+      "updated_at": "2026-09-19T11:50:07.332338"
+    },
+    {
+      "_id": "6aae76f080f25ba7a6fba50d",
+      "player_name": "Joona Saarelainen (C/RW)",
+      "season": "2025-2026",
+      "team_name": "KalPa",
+      "league_name": "Liiga",
+      "stats": {
+        "GP": "5",
+        "G": "0",
+        "A": "0",
+        "TP": "0",
+        "PIM": "4",
+        "+/-": "-1",
+        "PPG": "0.00"
+      },
+      "is_prospect": true,
+      "is_playoff": false,
+      "source": "prospects_scraper",
+      "updated_at": "2026-09-19T11:50:07.332402"
+    },
+    {
+      "_id": "6aae76f080f25ba7a6fba50e",
+      "player_name": "Everett Baldwin (D)",
+      "season": "2025-2026",
+      "team_name": "Providence College",
+      "league_name": "NCAA",
+      "stats": {
+        "GP": "-",
+        "G": "-",
+        "A": "-",
+        "TP": "-",
+        "PIM": "-",
+        "+/-": "-",
+        "PPG": "-"
+      },
+      "is_prospect": true,
+      "is_playoff": false,
+      "source": "prospects_scraper",
+      "updated_at": "2026-09-19T11:50:07.332455"
+    },
+    {
+      "_id": "6aae76f080f25ba7a6fba50f",
+      "player_name": "Morgan Anderberg (LW/C)",
+      "season": "2025-2026",
+      "team_name": "V\u00e4xj\u00f6 Lakers HC",
+      "league_name": "SHL",
+      "stats": {
+        "GP": "-",
+        "G": "-",
+        "A": "-",
+        "TP": "-",
+        "PIM": "-",
+        "+/-": "-",
+        "PPG": "-"
+      },
+      "is_prospect": true,
+      "is_playoff": false,
+      "source": "prospects_scraper",
+      "updated_at": "2026-09-19T11:50:07.332509"
+    },
+    {
+      "_id": "6aae76f080f25ba7a6fba510",
+      "player_name": "Joe Connor (C/LW)",
+      "season": "2025-2026",
+      "team_name": "Northeastern Univ.",
+      "league_name": "NCAA",
+      "stats": {
+        "GP": "-",
+        "G": "-",
+        "A": "-",
+        "TP": "-",
+        "PIM": "-",
+        "+/-": "-",
+        "PPG": "-"
+      },
+      "is_prospect": true,
+      "is_playoff": false,
+      "source": "prospects_scraper",
+      "updated_at": "2026-09-19T11:50:07.332561"
+    },
+    {
+      "_id": "6aae76f080f25ba7a6fba511",
+      "player_name": "Hagen Burrows (C/W)",
+      "season": "2025-2026",
+      "team_name": "Univ. of Notre Dame",
+      "league_name": "NCAA",
+      "stats": {
+        "GP": "-",
+        "G": "-",
+        "A": "-",
+        "TP": "-",
+        "PIM": "-",
+        "+/-": "-",
+        "PPG": "-"
+      },
+      "is_prospect": true,
+      "is_playoff": false,
+      "source": "prospects_scraper",
+      "updated_at": "2026-09-19T11:50:07.332613"
+    },
+    {
+      "_id": "6aae76f080f25ba7a6fba512",
+      "player_name": "Marco Mignosa (RW)",
+      "season": "2025-2026",
+      "team_name": "Penn State Univ.",
+      "league_name": "NCAA",
+      "stats": {
+        "GP": "-",
+        "G": "-",
+        "A": "-",
+        "TP": "-",
+        "PIM": "-",
+        "+/-": "-",
+        "PPG": "-"
+      },
+      "is_prospect": true,
+      "is_playoff": false,
+      "source": "prospects_scraper",
+      "updated_at": "2026-09-19T11:50:07.332665"
+    },
+    {
+      "_id": "6aae76f080f25ba7a6fba513",
+      "player_name": "Jan Golicic (D)",
+      "season": "2025-2026",
+      "team_name": "Quinnipiac Univ.",
+      "league_name": "NCAA",
+      "stats": {
+        "GP": "-",
+        "G": "-",
+        "A": "-",
+        "TP": "-",
+        "PIM": "-",
+        "+/-": "-",
+        "PPG": "-"
+      },
+      "is_prospect": true,
+      "is_playoff": false,
+      "source": "prospects_scraper",
+      "updated_at": "2026-09-19T11:50:07.332715"
+    },
+    {
+      "_id": "6aae76f080f25ba7a6fba514",
+      "player_name": "Nick Abruzzese (C/LW)",
+      "season": "2025-2026",
+      "team_name": "Syracuse Crunch",
+      "league_name": "AHL",
+      "stats": {
+        "GP": "-",
+        "G": "-",
+        "A": "-",
+        "TP": "-",
+        "PIM": "-",
+        "+/-": "-",
+        "PPG": "-"
+      },
+      "is_prospect": true,
+      "is_playoff": false,
+      "source": "prospects_scraper",
+      "updated_at": "2026-09-19T11:50:07.332766"
+    },
+    {
+      "_id": "6aae76f080f25ba7a6fba515",
+      "player_name": "Maxim Groshev (D/W)",
+      "season": "2025-2026",
+      "team_name": "Syracuse Crunch",
+      "league_name": "AHL",
+      "stats": {
+        "GP": "-",
+        "G": "-",
+        "A": "-",
+        "TP": "-",
+        "PIM": "-",
+        "+/-": "-",
+        "PPG": "-"
+      },
+      "is_prospect": true,
+      "is_playoff": false,
+      "source": "prospects_scraper",
+      "updated_at": "2026-09-19T11:50:07.332815"
+    },
+    {
+      "_id": "6aae76f080f25ba7a6fba516",
+      "player_name": "Ethan Czata (C/RW)",
+      "season": "2025-2026",
+      "team_name": "Guelph Storm",
+      "league_name": "OHL",
+      "stats": {
+        "GP": "-",
+        "G": "-",
+        "A": "-",
+        "TP": "-",
+        "PIM": "-",
+        "+/-": "-",
+        "PPG": "-"
+      },
+      "is_prospect": true,
+      "is_playoff": false,
+      "source": "prospects_scraper",
+      "updated_at": "2026-09-19T11:50:07.332865"
+    },
+    {
+      "_id": "6aae76f080f25ba7a6fba517",
+      "player_name": "Cooper Soller (F)",
+      "season": "2025-2026",
+      "team_name": "Sioux Falls Stampede",
+      "league_name": "USHL",
+      "stats": {
+        "GP": "-",
+        "G": "-",
+        "A": "-",
+        "TP": "-",
+        "PIM": "-",
+        "+/-": "-",
+        "PPG": "-"
+      },
+      "is_prospect": true,
+      "is_playoff": false,
+      "source": "prospects_scraper",
+      "updated_at": "2026-09-19T11:50:07.332917"
+    },
+    {
+      "_id": "6aae76f080f25ba7a6fba518",
+      "player_name": "Jack Pridham (RW)",
+      "season": "2025-2026",
+      "team_name": "Univ. of Denver",
+      "league_name": "NCAA",
+      "stats": {
+        "GP": "-",
+        "G": "-",
+        "A": "-",
+        "TP": "-",
+        "PIM": "-",
+        "+/-": "-",
+        "PPG": "-"
+      },
+      "is_prospect": true,
+      "is_playoff": false,
+      "source": "prospects_scraper",
+      "updated_at": "2026-09-19T11:50:07.332966"
+    },
+    {
+      "_id": "6aae76f080f25ba7a6fba519",
+      "player_name": "Scott Sabourin (RW/LW)",
+      "season": "2025-2026",
+      "team_name": "Syracuse Crunch",
+      "league_name": "AHL",
+      "stats": {
+        "GP": "-",
+        "G": "-",
+        "A": "-",
+        "TP": "-",
+        "PIM": "-",
+        "+/-": "-",
+        "PPG": "-"
+      },
+      "is_prospect": true,
+      "is_playoff": false,
+      "source": "prospects_scraper",
+      "updated_at": "2026-09-19T11:50:07.333015"
+    },
+    {
+      "_id": "6aae76f080f25ba7a6fba51a",
+      "player_name": "Jakob Pelletier (LW/C)",
+      "season": "2025-2026",
+      "team_name": "Syracuse Crunch",
+      "league_name": "AHL",
+      "stats": {
+        "GP": "-",
+        "G": "-",
+        "A": "-",
+        "TP": "-",
+        "PIM": "-",
+        "+/-": "-",
+        "PPG": "-"
+      },
+      "is_prospect": true,
+      "is_playoff": false,
+      "source": "prospects_scraper",
+      "updated_at": "2026-09-19T11:50:07.333061"
+    },
+    {
+      "_id": "6aae76f080f25ba7a6fba51b",
+      "player_name": "Noah Steen (LW/RW)",
+      "season": "2025-2026",
+      "team_name": "Syracuse Crunch",
+      "league_name": "AHL",
+      "stats": {
+        "GP": "-",
+        "G": "-",
+        "A": "-",
+        "TP": "-",
+        "PIM": "-",
+        "+/-": "-",
+        "PPG": "-"
+      },
+      "is_prospect": true,
+      "is_playoff": false,
+      "source": "prospects_scraper",
+      "updated_at": "2026-09-19T11:50:07.333112"
+    },
+    {
+      "_id": "6aae76f080f25ba7a6fba51c",
+      "player_name": "Tristan Allard (C/LW)",
+      "season": "2025-2026",
+      "team_name": "Syracuse Crunch",
+      "league_name": "AHL",
+      "stats": {
+        "GP": "-",
+        "G": "-",
+        "A": "-",
+        "TP": "-",
+        "PIM": "-",
+        "+/-": "-",
+        "PPG": "-"
+      },
+      "is_prospect": true,
+      "is_playoff": false,
+      "source": "prospects_scraper",
+      "updated_at": "2026-09-19T11:50:07.333162"
+    },
+    {
+      "_id": "6aae76f080f25ba7a6fba51d",
+      "player_name": "Connor Kurth (RW/LW)",
+      "season": "2025-2026",
+      "team_name": "Syracuse Crunch",
+      "league_name": "AHL",
+      "stats": {
+        "GP": "-",
+        "G": "-",
+        "A": "-",
+        "TP": "-",
+        "PIM": "-",
+        "+/-": "-",
+        "PPG": "-"
+      },
+      "is_prospect": true,
+      "is_playoff": false,
+      "source": "prospects_scraper",
+      "updated_at": "2026-09-19T11:50:07.333282"
+    },
+    {
+      "_id": "6aae76f080f25ba7a6fba51e",
+      "player_name": "Milo Roelens (C/LW)",
+      "season": "2025-2026",
+      "team_name": "Syracuse Crunch",
+      "league_name": "AHL",
+      "stats": {
+        "GP": "-",
+        "G": "-",
+        "A": "-",
+        "TP": "-",
+        "PIM": "-",
+        "+/-": "-",
+        "PPG": "-"
+      },
+      "is_prospect": true,
+      "is_playoff": false,
+      "source": "prospects_scraper",
+      "updated_at": "2026-09-19T11:50:07.333356"
+    },
+    {
+      "_id": "6aae76f180f25ba7a6fba51f",
+      "player_name": "Gabriel Szturc (C/LW)",
+      "season": "2025-2026",
+      "team_name": "Syracuse Crunch",
+      "league_name": "AHL",
+      "stats": {
+        "GP": "-",
+        "G": "-",
+        "A": "-",
+        "TP": "-",
+        "PIM": "-",
+        "+/-": "-",
+        "PPG": "-"
+      },
+      "is_prospect": true,
+      "is_playoff": false,
+      "source": "prospects_scraper",
+      "updated_at": "2026-09-19T11:50:07.333407"
+    },
+    {
+      "_id": "6aae76f180f25ba7a6fba520",
+      "player_name": "Dylan Duke (LW/C)",
+      "season": "2025-2026",
+      "team_name": "Syracuse Crunch",
+      "league_name": "AHL",
+      "stats": {
+        "GP": "-",
+        "G": "-",
+        "A": "-",
+        "TP": "-",
+        "PIM": "-",
+        "+/-": "-",
+        "PPG": "-"
+      },
+      "is_prospect": true,
+      "is_playoff": false,
+      "source": "prospects_scraper",
+      "updated_at": "2026-09-19T11:50:07.333457"
+    },
+    {
+      "_id": "6aae76f180f25ba7a6fba521",
+      "player_name": "Cooper Flinton (LW/RW)",
+      "season": "2025-2026",
+      "team_name": "Syracuse Crunch",
+      "league_name": "AHL",
+      "stats": {
+        "GP": "-",
+        "G": "-",
+        "A": "-",
+        "TP": "-",
+        "PIM": "-",
+        "+/-": "-",
+        "PPG": "-"
+      },
+      "is_prospect": true,
+      "is_playoff": false,
+      "source": "prospects_scraper",
+      "updated_at": "2026-09-19T11:50:07.333509"
+    },
+    {
+      "_id": "6aae76f180f25ba7a6fba522",
+      "player_name": "Sam O'Reilly (C/RW)",
+      "season": "2025-2026",
+      "team_name": "Syracuse Crunch",
+      "league_name": "AHL",
+      "stats": {
+        "GP": "-",
+        "G": "-",
+        "A": "-",
+        "TP": "-",
+        "PIM": "-",
+        "+/-": "-",
+        "PPG": "-"
+      },
+      "is_prospect": true,
+      "is_playoff": false,
+      "source": "prospects_scraper",
+      "updated_at": "2026-09-19T11:50:07.333560"
+    },
+    {
+      "_id": "6aae76f180f25ba7a6fba523",
+      "player_name": "Lucas Mercuri (C/RW)",
+      "season": "2025-2026",
+      "team_name": "Syracuse Crunch",
+      "league_name": "AHL",
+      "stats": {
+        "GP": "-",
+        "G": "-",
+        "A": "-",
+        "TP": "-",
+        "PIM": "-",
+        "+/-": "-",
+        "PPG": "-"
+      },
+      "is_prospect": true,
+      "is_playoff": false,
+      "source": "prospects_scraper",
+      "updated_at": "2026-09-19T11:50:07.333608"
+    },
+    {
+      "_id": "6aae76f180f25ba7a6fba524",
+      "player_name": "Ethan Gauthier (RW/LW)",
+      "season": "2025-2026",
+      "team_name": "Syracuse Crunch",
+      "league_name": "AHL",
+      "stats": {
+        "GP": "-",
+        "G": "-",
+        "A": "-",
+        "TP": "-",
+        "PIM": "-",
+        "+/-": "-",
+        "PPG": "-"
+      },
+      "is_prospect": true,
+      "is_playoff": false,
+      "source": "prospects_scraper",
+      "updated_at": "2026-09-19T11:50:07.333657"
+    },
+    {
+      "_id": "6aae76f180f25ba7a6fba525",
+      "player_name": "Dyllan Gill (D)",
+      "season": "2025-2026",
+      "team_name": "Syracuse Crunch",
+      "league_name": "AHL",
+      "stats": {
+        "GP": "-",
+        "G": "-",
+        "A": "-",
+        "TP": "-",
+        "PIM": "-",
+        "+/-": "-",
+        "PPG": "-"
+      },
+      "is_prospect": true,
+      "is_playoff": false,
+      "source": "prospects_scraper",
+      "updated_at": "2026-09-19T11:50:07.333717"
+    },
+    {
+      "_id": "6aae76f180f25ba7a6fba526",
+      "player_name": "Steven Santini (D)",
+      "season": "2025-2026",
+      "team_name": "Syracuse Crunch",
+      "league_name": "AHL",
+      "stats": {
+        "GP": "-",
+        "G": "-",
+        "A": "-",
+        "TP": "-",
+        "PIM": "-",
+        "+/-": "-",
+        "PPG": "-"
+      },
+      "is_prospect": true,
+      "is_playoff": false,
+      "source": "prospects_scraper",
+      "updated_at": "2026-09-19T11:50:07.333768"
+    },
+    {
+      "_id": "6aae76f180f25ba7a6fba527",
+      "player_name": "Simon Lundmark (D)",
+      "season": "2025-2026",
+      "team_name": "Syracuse Crunch",
+      "league_name": "AHL",
+      "stats": {
+        "GP": "-",
+        "G": "-",
+        "A": "-",
+        "TP": "-",
+        "PIM": "-",
+        "+/-": "-",
+        "PPG": "-"
+      },
+      "is_prospect": true,
+      "is_playoff": false,
+      "source": "prospects_scraper",
+      "updated_at": "2026-09-19T11:50:07.333817"
+    },
+    {
+      "_id": "6aae76f180f25ba7a6fba528",
+      "player_name": "Ethan Hay (C)",
+      "season": "2025-2026",
+      "team_name": "Miami Univ. (Ohio)",
+      "league_name": "NCAA",
+      "stats": {
+        "GP": "-",
+        "G": "-",
+        "A": "-",
+        "TP": "-",
+        "PIM": "-",
+        "+/-": "-",
+        "PPG": "-"
+      },
+      "is_prospect": true,
+      "is_playoff": false,
+      "source": "prospects_scraper",
+      "updated_at": "2026-09-19T11:50:07.333867"
+    },
+    {
+      "_id": "6aae76f180f25ba7a6fba529",
+      "player_name": "Michael Callahan (D)",
+      "season": "2025-2026",
+      "team_name": "Syracuse Crunch",
+      "league_name": "AHL",
+      "stats": {
+        "GP": "-",
+        "G": "-",
+        "A": "-",
+        "TP": "-",
+        "PIM": "-",
+        "+/-": "-",
+        "PPG": "-"
+      },
+      "is_prospect": true,
+      "is_playoff": false,
+      "source": "prospects_scraper",
+      "updated_at": "2026-09-19T11:50:07.333915"
+    },
+    {
+      "_id": "6aae76f180f25ba7a6fba52a",
+      "player_name": "Tomas Kralovic (D)",
+      "season": "2025-2026",
+      "team_name": "Syracuse Crunch",
+      "league_name": "AHL",
+      "stats": {
+        "GP": "-",
+        "G": "-",
+        "A": "-",
+        "TP": "-",
+        "PIM": "-",
+        "+/-": "-",
+        "PPG": "-"
+      },
+      "is_prospect": true,
+      "is_playoff": false,
+      "source": "prospects_scraper",
+      "updated_at": "2026-09-19T11:50:07.333963"
+    },
+    {
+      "_id": "6aae76f180f25ba7a6fba52b",
+      "player_name": "Klavs Veinbergs (C/LW)",
+      "season": "2025-2026",
+      "team_name": "Colorado College",
+      "league_name": "NCAA",
+      "stats": {
+        "GP": "-",
+        "G": "-",
+        "A": "-",
+        "TP": "-",
+        "PIM": "-",
+        "+/-": "-",
+        "PPG": "-"
+      },
+      "is_prospect": true,
+      "is_playoff": false,
+      "source": "prospects_scraper",
+      "updated_at": "2026-09-19T11:50:07.334011"
+    },
+    {
+      "_id": "6aae76f180f25ba7a6fba52c",
+      "player_name": "Jayson Shaugabay (C)",
+      "season": "2025-2026",
+      "team_name": "Univ. of Minnesota-Duluth",
+      "league_name": "NCAA",
+      "stats": {
+        "GP": "-",
+        "G": "-",
+        "A": "-",
+        "TP": "-",
+        "PIM": "-",
+        "+/-": "-",
+        "PPG": "-"
+      },
+      "is_prospect": true,
+      "is_playoff": false,
+      "source": "prospects_scraper",
+      "updated_at": "2026-09-19T11:50:07.334059"
+    },
+    {
+      "_id": "6aae76f180f25ba7a6fba52d",
+      "player_name": "Warren Clark (D)",
+      "season": "2025-2026",
+      "team_name": "Northern Michigan Univ.",
+      "league_name": "NCAA",
+      "stats": {
+        "GP": "-",
+        "G": "-",
+        "A": "-",
+        "TP": "-",
+        "PIM": "-",
+        "+/-": "-",
+        "PPG": "-"
+      },
+      "is_prospect": true,
+      "is_playoff": false,
+      "source": "prospects_scraper",
+      "updated_at": "2026-09-19T11:50:07.334107"
+    },
+    {
+      "_id": "6aae76f180f25ba7a6fba52e",
+      "player_name": "Oleg Kulebyakin (LW/RW)",
+      "season": "2025-2026",
+      "team_name": "Halifax Mooseheads",
+      "league_name": "QMJHL",
+      "stats": {
+        "GP": "-",
+        "G": "-",
+        "A": "-",
+        "TP": "-",
+        "PIM": "-",
+        "+/-": "-",
+        "PPG": "-"
+      },
+      "is_prospect": true,
+      "is_playoff": false,
+      "source": "prospects_scraper",
+      "updated_at": "2026-09-19T11:50:07.334155"
+    },
+    {
+      "_id": "6aae76f180f25ba7a6fba52f",
+      "player_name": "Jack Harvey (F)",
+      "season": "2025-2026",
+      "team_name": "Boston Univ.",
+      "league_name": "NCAA",
+      "stats": {
+        "GP": "-",
+        "G": "-",
+        "A": "-",
+        "TP": "-",
+        "PIM": "-",
+        "+/-": "-",
+        "PPG": "-"
+      },
+      "is_prospect": true,
+      "is_playoff": false,
+      "source": "prospects_scraper",
+      "updated_at": "2026-09-19T11:50:07.334236"
+    },
+    {
+      "_id": "6aae76f180f25ba7a6fba530",
+      "player_name": "Grant Spada (D)",
+      "season": "2025-2026",
+      "team_name": "Guelph Storm",
+      "league_name": "OHL",
+      "stats": {
+        "GP": "-",
+        "G": "-",
+        "A": "-",
+        "TP": "-",
+        "PIM": "-",
+        "+/-": "-",
+        "PPG": "-"
+      },
+      "is_prospect": true,
+      "is_playoff": false,
+      "source": "prospects_scraper",
+      "updated_at": "2026-09-19T11:50:07.334316"
+    },
+    {
+      "_id": "6aae76f180f25ba7a6fba531",
+      "player_name": "Aiden Foster (C)",
+      "season": "2025-2026",
+      "team_name": "Prince George Cougars",
+      "league_name": "WHL",
+      "stats": {
+        "GP": "-",
+        "G": "-",
+        "A": "-",
+        "TP": "-",
+        "PIM": "-",
+        "+/-": "-",
+        "PPG": "-"
+      },
+      "is_prospect": true,
+      "is_playoff": false,
+      "source": "prospects_scraper",
+      "updated_at": "2026-09-19T11:50:07.334390"
+    },
+    {
+      "_id": "6aae76f180f25ba7a6fba532",
+      "player_name": "Max Vil\u00e9n (D)",
+      "season": "2025-2026",
+      "team_name": "Moncton Wildcats",
+      "league_name": "QMJHL",
+      "stats": {
+        "GP": "-",
+        "G": "-",
+        "A": "-",
+        "TP": "-",
+        "PIM": "-",
+        "+/-": "-",
+        "PPG": "-"
+      },
+      "is_prospect": true,
+      "is_playoff": false,
+      "source": "prospects_scraper",
+      "updated_at": "2026-09-19T11:50:07.334464"
+    },
+    {
+      "_id": "6aae76f180f25ba7a6fba533",
+      "player_name": "Nikita Kucherov (RW)",
+      "season": "2025-2026",
+      "team_name": "Tampa Bay Lightning",
+      "league_name": "NHL",
+      "stats": {
+        "GP": "76",
+        "G": "44",
+        "A": "86",
+        "TP": "130",
+        "PIM": "50",
+        "+/-": "43"
+      },
+      "is_playoff": false,
+      "is_prospect": false,
+      "source": "selenium_table_1_fixed",
+      "updated_at": "2026-09-19T11:50:07.675354"
+    },
+    {
+      "_id": "6aae76f180f25ba7a6fba534",
+      "player_name": "Jake Guentzel (LW)",
+      "season": "2025-2026",
+      "team_name": "Tampa Bay Lightning",
+      "league_name": "NHL",
+      "stats": {
+        "GP": "81",
+        "G": "38",
+        "A": "50",
+        "TP": "88",
+        "PIM": "61",
+        "+/-": "13"
+      },
+      "is_playoff": false,
+      "is_prospect": false,
+      "source": "selenium_table_1_fixed",
+      "updated_at": "2026-09-19T11:50:07.675425"
+    },
+    {
+      "_id": "6aae76f180f25ba7a6fba535",
+      "player_name": "Brandon Hagel (LW)",
+      "season": "2025-2026",
+      "team_name": "Tampa Bay Lightning",
+      "league_name": "NHL",
+      "stats": {
+        "GP": "71",
+        "G": "36",
+        "A": "38",
+        "TP": "74",
+        "PIM": "58",
+        "+/-": "34"
+      },
+      "is_playoff": false,
+      "is_prospect": false,
+      "source": "selenium_table_1_fixed",
+      "updated_at": "2026-09-19T11:50:07.675485"
+    },
+    {
+      "_id": "6aae76f180f25ba7a6fba536",
+      "player_name": "Darren Raddysh (D)",
+      "season": "2025-2026",
+      "team_name": "Tampa Bay Lightning",
+      "league_name": "NHL",
+      "stats": {
+        "GP": "73",
+        "G": "22",
+        "A": "48",
+        "TP": "70",
+        "PIM": "72",
+        "+/-": "21"
+      },
+      "is_playoff": false,
+      "is_prospect": false,
+      "source": "selenium_table_1_fixed",
+      "updated_at": "2026-09-19T11:50:07.675535"
+    },
+    {
+      "_id": "6aae76f180f25ba7a6fba537",
+      "player_name": "Anthony Cirelli (C)",
+      "season": "2025-2026",
+      "team_name": "Tampa Bay Lightning",
+      "league_name": "NHL",
+      "stats": {
+        "GP": "71",
+        "G": "23",
+        "A": "29",
+        "TP": "52",
+        "PIM": "48",
+        "+/-": "38"
+      },
+      "is_playoff": false,
+      "is_prospect": false,
+      "source": "selenium_table_1_fixed",
+      "updated_at": "2026-09-19T11:50:07.675585"
+    },
+    {
+      "_id": "6aae76f180f25ba7a6fba538",
+      "player_name": "Brayden Point (C)",
+      "season": "2025-2026",
+      "team_name": "Tampa Bay Lightning",
+      "league_name": "NHL",
+      "stats": {
+        "GP": "63",
+        "G": "18",
+        "A": "32",
+        "TP": "50",
+        "PIM": "14",
+        "+/-": "12"
+      },
+      "is_playoff": false,
+      "is_prospect": false,
+      "source": "selenium_table_1_fixed",
+      "updated_at": "2026-09-19T11:50:07.675632"
+    },
+    {
+      "_id": "6aae76f180f25ba7a6fba539",
+      "player_name": "Gage Goncalves (C/LW)",
+      "season": "2025-2026",
+      "team_name": "Tampa Bay Lightning",
+      "league_name": "NHL",
+      "stats": {
+        "GP": "74",
+        "G": "11",
+        "A": "22",
+        "TP": "33",
+        "PIM": "41",
+        "+/-": "26"
+      },
+      "is_playoff": false,
+      "is_prospect": false,
+      "source": "selenium_table_1_fixed",
+      "updated_at": "2026-09-19T11:50:07.675677"
+    },
+    {
+      "_id": "6aae76f180f25ba7a6fba53a",
+      "player_name": "Oliver Bjorkstrand (RW)",
+      "season": "2025-2026",
+      "team_name": "Tampa Bay Lightning",
+      "league_name": "NHL",
+      "stats": {
+        "GP": "80",
+        "G": "12",
+        "A": "20",
+        "TP": "32",
+        "PIM": "16",
+        "+/-": "-14"
+      },
+      "is_playoff": false,
+      "is_prospect": false,
+      "source": "selenium_table_1_fixed",
+      "updated_at": "2026-09-19T11:50:07.675720"
+    },
+    {
+      "_id": "6aae76f180f25ba7a6fba53b",
+      "player_name": "Janis Moser (D)",
+      "season": "2025-2026",
+      "team_name": "Tampa Bay Lightning",
+      "league_name": "NHL",
+      "stats": {
+        "GP": "79",
+        "G": "7",
+        "A": "22",
+        "TP": "29",
+        "PIM": "69",
+        "+/-": "41"
+      },
+      "is_playoff": false,
+      "is_prospect": false,
+      "source": "selenium_table_1_fixed",
+      "updated_at": "2026-09-19T11:50:07.675764"
+    },
+    {
+      "_id": "6aae76f180f25ba7a6fba53c",
+      "player_name": "Charle-\u00c9douard D'Astous (D)",
+      "season": "2025-2026",
+      "team_name": "Tampa Bay Lightning",
+      "league_name": "NHL",
+      "stats": {
+        "GP": "70",
+        "G": "6",
+        "A": "23",
+        "TP": "29",
+        "PIM": "112",
+        "+/-": "-4"
+      },
+      "is_playoff": false,
+      "is_prospect": false,
+      "source": "selenium_table_1_fixed",
+      "updated_at": "2026-09-19T11:50:07.675808"
+    },
+    {
+      "_id": "6aae76f180f25ba7a6fba53d",
+      "player_name": "Yanni Gourde (C/W)",
+      "season": "2025-2026",
+      "team_name": "Tampa Bay Lightning",
+      "league_name": "NHL",
+      "stats": {
+        "GP": "82",
+        "G": "9",
+        "A": "19",
+        "TP": "28",
+        "PIM": "66",
+        "+/-": "-6"
+      },
+      "is_playoff": false,
+      "is_prospect": false,
+      "source": "selenium_table_1_fixed",
+      "updated_at": "2026-09-19T11:50:07.675851"
+    },
+    {
+      "_id": "6aae76f180f25ba7a6fba53e",
+      "player_name": "Pontus Holmberg (W/C)",
+      "season": "2025-2026",
+      "team_name": "Tampa Bay Lightning",
+      "league_name": "NHL",
+      "stats": {
+        "GP": "70",
+        "G": "11",
+        "A": "11",
+        "TP": "22",
+        "PIM": "31",
+        "+/-": "1"
+      },
+      "is_playoff": false,
+      "is_prospect": false,
+      "source": "selenium_table_1_fixed",
+      "updated_at": "2026-09-19T11:50:07.675892"
+    },
+    {
+      "_id": "6aae76f180f25ba7a6fba53f",
+      "player_name": "Ryan McDonagh (D)",
+      "season": "2025-2026",
+      "team_name": "Tampa Bay Lightning",
+      "league_name": "NHL",
+      "stats": {
+        "GP": "48",
+        "G": "6",
+        "A": "15",
+        "TP": "21",
+        "PIM": "6",
+        "+/-": "14"
+      },
+      "is_playoff": false,
+      "is_prospect": false,
+      "source": "selenium_table_1_fixed",
+      "updated_at": "2026-09-19T11:50:07.675934"
+    },
+    {
+      "_id": "6aae76f280f25ba7a6fba540",
+      "player_name": "Zemgus Girgensons (W/C)",
+      "season": "2025-2026",
+      "team_name": "Tampa Bay Lightning",
+      "league_name": "NHL",
+      "stats": {
+        "GP": "74",
+        "G": "9",
+        "A": "11",
+        "TP": "20",
+        "PIM": "31",
+        "+/-": "1"
+      },
+      "is_playoff": false,
+      "is_prospect": false,
+      "source": "selenium_table_1_fixed",
+      "updated_at": "2026-09-19T11:50:07.675977"
+    },
+    {
+      "_id": "6aae76f280f25ba7a6fba541",
+      "player_name": "Victor Hedman (D)",
+      "season": "2025-2026",
+      "team_name": "Tampa Bay Lightning",
+      "league_name": "NHL",
+      "stats": {
+        "GP": "33",
+        "G": "1",
+        "A": "16",
+        "TP": "17",
+        "PIM": "10",
+        "+/-": "-1"
+      },
+      "is_playoff": false,
+      "is_prospect": false,
+      "source": "selenium_table_1_fixed",
+      "updated_at": "2026-09-19T11:50:07.676020"
+    },
+    {
+      "_id": "6aae76f280f25ba7a6fba542",
+      "player_name": "Dominic James (C/LW)",
+      "season": "2025-2026",
+      "team_name": "Tampa Bay Lightning",
+      "league_name": "NHL",
+      "stats": {
+        "GP": "43",
+        "G": "7",
+        "A": "8",
+        "TP": "15",
+        "PIM": "8",
+        "+/-": "4"
+      },
+      "is_playoff": false,
+      "is_prospect": false,
+      "source": "selenium_table_1_fixed",
+      "updated_at": "2026-09-19T11:50:07.676062"
+    },
+    {
+      "_id": "6aae76f280f25ba7a6fba543",
+      "player_name": "Nick Paul (LW/C)",
+      "season": "2025-2026",
+      "team_name": "Tampa Bay Lightning",
+      "league_name": "NHL",
+      "stats": {
+        "GP": "51",
+        "G": "7",
+        "A": "8",
+        "TP": "15",
+        "PIM": "32",
+        "+/-": "-15"
+      },
+      "is_playoff": false,
+      "is_prospect": false,
+      "source": "selenium_table_1_fixed",
+      "updated_at": "2026-09-19T11:50:07.676104"
+    },
+    {
+      "_id": "6aae76f280f25ba7a6fba544",
+      "player_name": "Emil Lilleberg (D)",
+      "season": "2025-2026",
+      "team_name": "Tampa Bay Lightning",
+      "league_name": "NHL",
+      "stats": {
+        "GP": "50",
+        "G": "4",
+        "A": "8",
+        "TP": "12",
+        "PIM": "61",
+        "+/-": "15"
+      },
+      "is_playoff": false,
+      "is_prospect": false,
+      "source": "selenium_table_1_fixed",
+      "updated_at": "2026-09-19T11:50:07.676143"
+    },
+    {
+      "_id": "6aae76f280f25ba7a6fba545",
+      "player_name": "Erik Cernak (D)",
+      "season": "2025-2026",
+      "team_name": "Tampa Bay Lightning",
+      "league_name": "NHL",
+      "stats": {
+        "GP": "61",
+        "G": "3",
+        "A": "8",
+        "TP": "11",
+        "PIM": "74",
+        "+/-": "3"
+      },
+      "is_playoff": false,
+      "is_prospect": false,
+      "source": "selenium_table_1_fixed",
+      "updated_at": "2026-09-19T11:50:07.676214"
+    },
+    {
+      "_id": "6aae76f280f25ba7a6fba546",
+      "player_name": "Maxwell Crozier (D)",
+      "season": "2025-2026",
+      "team_name": "Tampa Bay Lightning",
+      "league_name": "NHL",
+      "stats": {
+        "GP": "35",
+        "G": "1",
+        "A": "9",
+        "TP": "10",
+        "PIM": "40",
+        "+/-": "7"
+      },
+      "is_playoff": false,
+      "is_prospect": false,
+      "source": "selenium_table_1_fixed",
+      "updated_at": "2026-09-19T11:50:07.676278"
+    },
+    {
+      "_id": "6aae76f280f25ba7a6fba547",
+      "player_name": "Corey Perry (RW/LW)",
+      "season": "2025-2026",
+      "team_name": "Tampa Bay Lightning",
+      "league_name": "NHL",
+      "stats": {
+        "GP": "22",
+        "G": "6",
+        "A": "3",
+        "TP": "9",
+        "PIM": "22",
+        "+/-": "1"
+      },
+      "is_playoff": false,
+      "is_prospect": false,
+      "source": "selenium_table_1_fixed",
+      "updated_at": "2026-09-19T11:50:07.676324"
+    },
+    {
+      "_id": "6aae76f280f25ba7a6fba548",
+      "player_name": "Scott Sabourin (RW/LW)",
+      "season": "2025-2026",
+      "team_name": "Tampa Bay Lightning",
+      "league_name": "NHL",
+      "stats": {
+        "GP": "26",
+        "G": "1",
+        "A": "4",
+        "TP": "5",
+        "PIM": "89",
+        "+/-": "1"
+      },
+      "is_playoff": false,
+      "is_prospect": false,
+      "source": "selenium_table_1_fixed",
+      "updated_at": "2026-09-19T11:50:07.676370"
+    },
+    {
+      "_id": "6aae76f280f25ba7a6fba549",
+      "player_name": "Jack Finley (C/RW)",
+      "season": "2025-2026",
+      "team_name": "Tampa Bay Lightning",
+      "league_name": "NHL",
+      "stats": {
+        "GP": "22",
+        "G": "2",
+        "A": "1",
+        "TP": "3",
+        "PIM": "21",
+        "+/-": "2"
+      },
+      "is_playoff": false,
+      "is_prospect": false,
+      "source": "selenium_table_1_fixed",
+      "updated_at": "2026-09-19T11:50:07.676414"
+    },
+    {
+      "_id": "6aae76f280f25ba7a6fba54a",
+      "player_name": "Conor Geekie (RW/C)",
+      "season": "2025-2026",
+      "team_name": "Tampa Bay Lightning",
+      "league_name": "NHL",
+      "stats": {
+        "GP": "14",
+        "G": "1",
+        "A": "2",
+        "TP": "3",
+        "PIM": "8",
+        "+/-": "-3"
+      },
+      "is_playoff": false,
+      "is_prospect": false,
+      "source": "selenium_table_1_fixed",
+      "updated_at": "2026-09-19T11:50:07.676456"
+    },
+    {
+      "_id": "6aae76f280f25ba7a6fba54b",
+      "player_name": "Declan Carlile (D)",
+      "season": "2025-2026",
+      "team_name": "Tampa Bay Lightning",
+      "league_name": "NHL",
+      "stats": {
+        "GP": "42",
+        "G": "1",
+        "A": "2",
+        "TP": "3",
+        "PIM": "40",
+        "+/-": "5"
+      },
+      "is_playoff": false,
+      "is_prospect": false,
+      "source": "selenium_table_1_fixed",
+      "updated_at": "2026-09-19T11:50:07.676501"
+    },
+    {
+      "_id": "6aae76f280f25ba7a6fba54c",
+      "player_name": "Curtis Douglas (C/LW)",
+      "season": "2025-2026",
+      "team_name": "Tampa Bay Lightning",
+      "league_name": "NHL",
+      "stats": {
+        "GP": "29",
+        "G": "0",
+        "A": "2",
+        "TP": "2",
+        "PIM": "92",
+        "+/-": "1"
+      },
+      "is_playoff": false,
+      "is_prospect": false,
+      "source": "selenium_table_1_fixed",
+      "updated_at": "2026-09-19T11:50:07.676542"
+    },
+    {
+      "_id": "6aae76f280f25ba7a6fba54d",
+      "player_name": "Maxim Groshev (D/W)",
+      "season": "2025-2026",
+      "team_name": "Tampa Bay Lightning",
+      "league_name": "NHL",
+      "stats": {
+        "GP": "2",
+        "G": "0",
+        "A": "1",
+        "TP": "1",
+        "PIM": "0",
+        "+/-": "1"
+      },
+      "is_playoff": false,
+      "is_prospect": false,
+      "source": "selenium_table_1_fixed",
+      "updated_at": "2026-09-19T11:50:07.676583"
+    },
+    {
+      "_id": "6aae76f280f25ba7a6fba54e",
+      "player_name": "Mitchell Chaffee (RW)",
+      "season": "2025-2026",
+      "team_name": "Tampa Bay Lightning",
+      "league_name": "NHL",
+      "stats": {
+        "GP": "11",
+        "G": "0",
+        "A": "1",
+        "TP": "1",
+        "PIM": "4",
+        "+/-": "-2"
+      },
+      "is_playoff": false,
+      "is_prospect": false,
+      "source": "selenium_table_1_fixed",
+      "updated_at": "2026-09-19T11:50:07.676625"
+    },
+    {
+      "_id": "6aae76f280f25ba7a6fba54f",
+      "player_name": "Steven Santini (D)",
+      "season": "2025-2026",
+      "team_name": "Tampa Bay Lightning",
+      "league_name": "NHL",
+      "stats": {
+        "GP": "12",
+        "G": "0",
+        "A": "1",
+        "TP": "1",
+        "PIM": "2",
+        "+/-": "1"
+      },
+      "is_playoff": false,
+      "is_prospect": false,
+      "source": "selenium_table_1_fixed",
+      "updated_at": "2026-09-19T11:50:07.676669"
+    },
+    {
+      "_id": "6aae76f280f25ba7a6fba550",
+      "player_name": "Simon Lundmark (D)",
+      "season": "2025-2026",
+      "team_name": "Tampa Bay Lightning",
+      "league_name": "NHL",
+      "stats": {
+        "GP": "1",
+        "G": "0",
+        "A": "0",
+        "TP": "0",
+        "PIM": "0",
+        "+/-": "1"
+      },
+      "is_playoff": false,
+      "is_prospect": false,
+      "source": "selenium_table_1_fixed",
+      "updated_at": "2026-09-19T11:50:07.676712"
+    },
+    {
+      "_id": "6aae76f280f25ba7a6fba551",
+      "player_name": "Dylan Duke (LW/C)",
+      "season": "2025-2026",
+      "team_name": "Tampa Bay Lightning",
+      "league_name": "NHL",
+      "stats": {
+        "GP": "1",
+        "G": "0",
+        "A": "0",
+        "TP": "0",
+        "PIM": "0",
+        "+/-": "-1"
+      },
+      "is_playoff": false,
+      "is_prospect": false,
+      "source": "selenium_table_1_fixed",
+      "updated_at": "2026-09-19T11:50:07.676756"
+    },
+    {
+      "_id": "6aae76f280f25ba7a6fba552",
+      "player_name": "Boris Katchouk (LW/C)",
+      "season": "2025-2026",
+      "team_name": "Tampa Bay Lightning",
+      "league_name": "NHL",
+      "stats": {
+        "GP": "3",
+        "G": "0",
+        "A": "0",
+        "TP": "0",
+        "PIM": "0",
+        "+/-": "0"
+      },
+      "is_playoff": false,
+      "is_prospect": false,
+      "source": "selenium_table_1_fixed",
+      "updated_at": "2026-09-19T11:50:07.676797"
+    },
+    {
+      "_id": "6aae76f280f25ba7a6fba553",
+      "player_name": "Jakob Pelletier (LW/C)",
+      "season": "2025-2026",
+      "team_name": "Tampa Bay Lightning",
+      "league_name": "NHL",
+      "stats": {
+        "GP": "5",
+        "G": "0",
+        "A": "0",
+        "TP": "0",
+        "PIM": "0",
+        "+/-": "-1"
+      },
+      "is_playoff": false,
+      "is_prospect": false,
+      "source": "selenium_table_1_fixed",
+      "updated_at": "2026-09-19T11:50:07.676837"
+    }
+  ]
+}
