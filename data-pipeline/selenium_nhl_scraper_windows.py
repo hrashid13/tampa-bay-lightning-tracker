@@ -5,6 +5,7 @@ Elite Prospects NHL Stats Scraper with Selenium
 Cross-platform: runs on Windows (local) and Linux (GitHub Actions)
 """
 
+import re
 import time
 import glob
 import platform
@@ -25,7 +26,9 @@ import os
 load_dotenv()
 
 # Configuration
-STATS_URL = "https://www.eliteprospects.com/team/75/tampa-bay-lightning/2025-2026?tab=stats"
+# No season in the URL: Elite Prospects shows the current season automatically.
+# (The old URL was pinned to /2025-2026, so it kept returning last season's stats.)
+STATS_URL = "https://www.eliteprospects.com/team/75/tampa-bay-lightning?tab=stats"
 MONGODB_URI = os.getenv('MONGODB_URI')
 if not MONGODB_URI:
     raise ValueError("MONGODB_URI not found in environment variables")
@@ -34,6 +37,19 @@ COLLECTION_NAME = 'player_stats'
 
 SCRIPT_DIR = os.path.dirname(os.path.abspath(__file__))
 print(f"Script directory: {SCRIPT_DIR}\n")
+
+
+def detect_season(html):
+    """Read the season from the page heading, e.g. '2026-2027 Tampa Bay Lightning Player Stats'.
+    Falls back to a date-based guess (NHL league year starts July 1) if the heading is missing."""
+    text = re.sub(r'<[^>]+>', ' ', html)
+    m = re.search(r'(\d{4}-\d{4})\s+Tampa Bay Lightning\s+Player\s+Stats', text)
+    if m:
+        return m.group(1)
+    print("WARNING: season heading not found on page - guessing from today's date")
+    today = datetime.now()
+    start = today.year if today.month >= 7 else today.year - 1
+    return f"{start}-{start + 1}"
 
 
 def setup_driver():
@@ -100,6 +116,12 @@ def scrape_stats_table(url):
         with open(debug_file, 'w', encoding='utf-8') as f:
             f.write(html_content)
         print(f"OK: Saved page source to: {debug_file}")
+
+        # Record which season this page shows so combine_tbl_data.py can label the data
+        season = detect_season(html_content)
+        with open(os.path.join(SCRIPT_DIR, 'nhl_season.txt'), 'w') as f:
+            f.write(season)
+        print(f"OK: Detected season: {season}")
 
         print("\nExtracting tables...")
         from io import StringIO

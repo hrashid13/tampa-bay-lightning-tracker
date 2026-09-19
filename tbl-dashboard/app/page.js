@@ -15,6 +15,8 @@ import data from '../data/players.json';
 // Data is baked in at build time (exported nightly from MongoDB)
 const stats = data.players.map(enrichPlayer);
 const leagues = [...new Set(stats.map(p => p.league))].sort();
+const season = data.players[0]?.season ?? '';
+const updated = data.players.reduce((m, p) => (p.updated_at > m ? p.updated_at : m), '').slice(0, 10);
 
 const DEFAULTS = {
   search: '',
@@ -95,7 +97,7 @@ export default function Dashboard() {
           <div>
             <h1 className="text-3xl md:text-4xl font-bold tracking-tight">Tampa Bay Lightning Stats</h1>
             <p className="text-blue-100/90 mt-1 text-sm md:text-base">
-              Season 2025-2026 · {stats.length} players · Updated {data.generatedAt.slice(0, 10)}
+              Season {season} · {stats.length} players · Updated {updated}
             </p>
           </div>
         </div>

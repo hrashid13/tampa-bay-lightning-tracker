@@ -3,7 +3,7 @@
 import pandas as pd
 import json
 import os
-import os
+import re
 from dotenv import load_dotenv
 from datetime import datetime
 from pymongo import MongoClient
@@ -21,9 +21,26 @@ DB_NAME = 'lightning_tracker'
 COLLECTION_NAME = 'player_stats'
 SCRIPT_DIR = os.path.dirname(os.path.abspath(__file__))
 
+
+def load_season():
+    """Season detected by the NHL scraper (nhl_season.txt); falls back to a date-based guess."""
+    season_file = os.path.join(SCRIPT_DIR, 'nhl_season.txt')
+    if os.path.exists(season_file):
+        with open(season_file) as f:
+            season = f.read().strip()
+        if re.fullmatch(r'\d{4}-\d{4}', season):
+            return season
+    today = datetime.utcnow()
+    start = today.year if today.month >= 7 else today.year - 1
+    return f"{start}-{start + 1}"
+
+
+SEASON = load_season()
+
 print("=" * 70)
 print("Tampa Bay Lightning - Data Combination (TRULY FIXED)")
 print("=" * 70)
+print(f"Season: {SEASON}")
 print()
 
 
@@ -124,7 +141,7 @@ for idx, row in nhl_df.iterrows():
     
     record = {
         'player_name': player_name,
-        'season': '2025-2026',
+        'season': SEASON,
         'team_name': 'Tampa Bay Lightning',
         'league_name': 'NHL',
         'stats': stats,
@@ -159,6 +176,10 @@ print(f"True prospects: {len(prospects_only)}")
 
 # Combine: True prospects + Fresh NHL data
 all_players = prospects_only + nhl_records
+
+# Everything on the dashboard is the current season, so label every record the same way
+for p in all_players:
+    p['season'] = SEASON
 
 print(f"\n✓ Total players after combining: {len(all_players)}")
 
