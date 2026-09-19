@@ -1,8 +1,7 @@
 # Tampa Bay Lightning Player Statistics Tracker
 
 [![Live Dashboard](https://img.shields.io/badge/Live-Dashboard-blue)](https://hrashid13.github.io/tampa-bay-lightning-tracker/)
-[![Nightly stats update](https://github.com/hrashid13/tampa-bay-lightning-tracker/actions/workflows/update_stats.yml/badge.svg)](https://github.com/hrashid13/tampa-bay-lightning-tracker/actions/workflows/update_stats.yml)
-[![Deploy dashboard](https://github.com/hrashid13/tampa-bay-lightning-tracker/actions/workflows/deploy_pages.yml/badge.svg)](https://github.com/hrashid13/tampa-bay-lightning-tracker/actions/workflows/deploy_pages.yml)
+
 
 A full-stack sports analytics project that tracks Tampa Bay Lightning NHL roster players and prospects across the NHL, AHL, ECHL, OHL, European leagues, and NCAA. Stats are scraped every night, stored in MongoDB Atlas, and published as a fast, static React dashboard on GitHub Pages.
 
