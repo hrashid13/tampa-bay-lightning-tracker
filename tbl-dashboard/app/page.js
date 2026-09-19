@@ -1,7 +1,7 @@
 'use client';
 
 import { useState } from 'react';
-import { Zap, RotateCcw } from 'lucide-react';
+import { RotateCcw } from 'lucide-react';
 import TopScorers from '../components/TopScorers';
 import LeagueBreakdown from '../components/LeagueBreakdown';
 import PointsPerGame from '../components/PointsPerGame';
@@ -91,10 +91,7 @@ export default function Dashboard() {
       {/* Header */}
       <header className="relative overflow-hidden bg-gradient-to-br from-[#002868] via-[#00337f] to-[#001a45] border-b-4 border-white shadow-lg">
         <div className="absolute inset-0 opacity-10 bg-[radial-gradient(circle_at_85%_20%,#ffffff_0,transparent_45%)]" />
-        <div className="relative container mx-auto px-6 py-8 flex items-center gap-4">
-          <div className="shrink-0 w-14 h-14 rounded-full bg-white flex items-center justify-center shadow-md">
-            <Zap size={30} className="text-[#002868]" fill="#002868" />
-          </div>
+        <div className="relative container mx-auto px-6 py-8">
           <div>
             <h1 className="text-3xl md:text-4xl font-bold tracking-tight">Tampa Bay Lightning Stats</h1>
             <p className="text-blue-100/90 mt-1 text-sm md:text-base">
