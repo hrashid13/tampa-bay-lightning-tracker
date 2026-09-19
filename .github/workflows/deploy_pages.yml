@@ -1,0 +1,86 @@
+name: Deploy Dashboard to GitHub Pages
+
+on:
+  # Rebuild after the nightly scrape finishes successfully
+  workflow_run:
+    workflows: ["Nightly TBL Stats Update"]
+    types: [completed]
+  # Rebuild when dashboard code changes (no re-scrape needed, data comes from Mongo)
+  push:
+    branches: [main]
+    paths:
+      - "tbl-dashboard/**"
+      - "data-pipeline/export_json.py"
+      - ".github/workflows/deploy_pages.yml"
+  # Manual trigger from the Actions tab
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+# Only one deploy at a time; let a running deploy finish rather than cancel it
+concurrency:
+  group: pages
+  cancel-in-progress: false
+
+jobs:
+  build:
+    # Skip if the nightly scrape failed
+    if: github.event_name != 'workflow_run' || github.event.workflow_run.conclusion == 'success'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      # 1. Pull the latest data out of MongoDB into tbl-dashboard/data/players.json
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Install pymongo
+        run: pip install pymongo
+
+      - name: Export players from MongoDB to JSON
+        env:
+          MONGODB_URI: ${{ secrets.MONGODB_URI }}
+          # Optional repo variables (Settings > Secrets and variables > Actions > Variables).
+          # Only needed if the script can't work out the database/collection on its own.
+          MONGODB_DB: ${{ vars.MONGODB_DB }}
+          MONGODB_COLLECTION: ${{ vars.MONGODB_COLLECTION }}
+        run: python data-pipeline/export_json.py
+
+      # 2. Build the static site
+      - name: Set up Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+          cache-dependency-path: tbl-dashboard/package-lock.json
+
+      - name: Install dependencies
+        working-directory: tbl-dashboard
+        run: npm ci
+
+      - name: Build static site
+        working-directory: tbl-dashboard
+        run: npm run build
+
+      # 3. Package the export for Pages
+      - name: Upload Pages artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: tbl-dashboard/out
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4
