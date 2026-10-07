@@ -2,8 +2,8 @@ name: Nightly TBL Stats Update
 
 on:
   schedule:
-    # Runs at 7:00 AM UTC = 2:00 AM ET (EST) / 3:00 AM ET (EDT)
-    - cron: '0 7 * * *'
+    # Runs at 7:13 AM UTC = 2:13 AM ET (EST) / 3:13 AM ET (EDT)
+    - cron: '13 7 * * *'
   workflow_dispatch:
     # Allows you to manually trigger it from GitHub's Actions tab anytime
 
