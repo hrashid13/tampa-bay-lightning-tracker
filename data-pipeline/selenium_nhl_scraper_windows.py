@@ -138,8 +138,15 @@ def scrape_stats_table(url):
 
             print(f"\nTable {i+1}: {rows} rows, columns: {cols[:10]}")
 
-            has_stat_cols = any(col in ['GP', 'G', 'A', 'TP'] for col in cols)
-            if not has_stat_cols or rows < 6:
+            # A player-stats table needs BOTH a name column and real per-player
+            # scoring columns. 'GP' alone isn't enough: the franchise history/
+            # standings table on this same page also has a 'GP' column (team
+            # games played per season), and on slow-loading days that table
+            # can be the only one pandas finds - without this check it gets
+            # mistaken for the roster table.
+            has_name_col = any(col in ['Skater', 'Player', 'Name', 'N'] for col in cols)
+            scoring_cols_present = sum(col in cols for col in ['G', 'A', 'TP', 'PTS'])
+            if not has_name_col or scoring_cols_present < 2 or rows < 6:
                 continue
 
             score = 0
@@ -192,6 +199,11 @@ def main():
 
     df = scrape_stats_table(STATS_URL)
 
+    if df is None:
+        print("\nERROR: Failed to scrape stats table")
+        print("Check selenium_page_source.html to see what was loaded")
+        raise SystemExit(1)  # fail this step, not the next one, when nothing usable was found
+
     if df is not None:
         csv_file = os.path.join(SCRIPT_DIR, 'selenium_nhl_stats.csv')
         df.to_csv(csv_file, index=False)
@@ -204,9 +216,6 @@ def main():
         print("\n" + "=" * 70)
         print("SUCCESS: NHL stats scraped!")
         print("=" * 70)
-    else:
-        print("\nERROR: Failed to scrape stats table")
-        print("Check selenium_page_source.html to see what was loaded")
 
 
 if __name__ == '__main__':
