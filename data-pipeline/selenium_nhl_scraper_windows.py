@@ -128,6 +128,18 @@ def scrape_stats_table(url):
         tables = pd.read_html(StringIO(html_content))
         print(f"OK: Found {len(tables)} tables")
 
+        # Once the season is underway, Elite Prospects adds a 'Postseason' column
+        # group next to 'Regular Season', which gives pandas a two-row header -
+        # columns come back as tuples like ('Regular Season', 'GP') instead of
+        # plain 'GP'. Flatten to the innermost label so the scoring below (which
+        # looks for plain 'Skater'/'GP'/'G'/etc.) still matches. This duplicates
+        # each stat name once for Regular Season and once for Postseason, same
+        # as the preseason table's GP/GP.1 columns - handled the same way
+        # downstream (via CSV round-trip auto-dedup).
+        for t_idx, tbl in enumerate(tables):
+            if isinstance(tbl.columns, pd.MultiIndex):
+                tbl.columns = [c[-1] if isinstance(c, tuple) else c for c in tbl.columns]
+
         # Score each table - pick the one most likely to be the full current roster
         stats_table = None
         best_score = -999
