@@ -85,6 +85,21 @@ def setup_driver():
         raise
 
 
+MAX_ATTEMPTS = 3          # fresh browser + page load per attempt
+TABLE_WAIT_SECONDS = 40   # how long to wait for the roster table on each attempt
+
+
+def describe_page(driver):
+    """Log what was actually served, so a failed run shows e.g. a bot-check or error page."""
+    try:
+        title = driver.title
+        body = driver.find_element(By.TAG_NAME, 'body').text[:300].replace('\n', ' ')
+        print(f"   Page title: {title!r}")
+        print(f"   Page text starts: {body!r}")
+    except Exception as e:
+        print(f"   (could not read page for diagnostics: {e})")
+
+
 def scrape_stats_table(url):
     """Scrape the NHL roster stats table"""
     print(f"Loading page: {url}")
@@ -92,30 +107,56 @@ def scrape_stats_table(url):
 
     driver = None
     try:
-        driver = setup_driver()
-        print("OK: Browser started")
-
-        driver.get(url)
-        print("OK: Page loaded")
-
-        print("Waiting for stats table to load...")
-        wait = WebDriverWait(driver, 15)
-        try:
-            wait.until(EC.presence_of_element_located((By.TAG_NAME, "table")))
-            print("OK: Table element found")
-        except:
-            print("WARNING: Timeout waiting for table")
-
-        print("Waiting for JavaScript to execute (5 seconds)...")
-        time.sleep(5)
-        print("OK: Wait complete")
-
-        html_content = driver.page_source
-
+        html_content = None
+        loaded = False
         debug_file = os.path.join(SCRIPT_DIR, 'selenium_page_source.html')
-        with open(debug_file, 'w', encoding='utf-8') as f:
-            f.write(html_content)
-        print(f"OK: Saved page source to: {debug_file}")
+
+        for attempt in range(1, MAX_ATTEMPTS + 1):
+            print(f"\n--- Attempt {attempt}/{MAX_ATTEMPTS} ---")
+
+            # Fresh browser each attempt, so a bad session/challenge page isn't reused
+            if driver:
+                driver.quit()
+                driver = None
+            driver = setup_driver()
+            print("OK: Browser started")
+
+            driver.get(url)
+            print("OK: Page loaded")
+
+            # Wait for the actual roster table (its 'Skater' header), not just any <table>:
+            # the page has many other tables that can appear before the roster does.
+            print(f"Waiting up to {TABLE_WAIT_SECONDS}s for the roster table...")
+            try:
+                WebDriverWait(driver, TABLE_WAIT_SECONDS).until(
+                    lambda d: 'Skater' in d.page_source
+                )
+                loaded = True
+                print("OK: Roster table found")
+            except Exception:
+                print("WARNING: Timed out waiting for the roster table")
+                describe_page(driver)
+
+            html_content = driver.page_source
+            with open(debug_file, 'w', encoding='utf-8') as f:
+                f.write(html_content)
+            print(f"OK: Saved page source to: {debug_file}")
+
+            if loaded:
+                time.sleep(3)  # let the rest of the page finish rendering
+                html_content = driver.page_source
+                with open(debug_file, 'w', encoding='utf-8') as f:
+                    f.write(html_content)
+                break
+
+            if attempt < MAX_ATTEMPTS:
+                wait_s = 10 * attempt
+                print(f"Retrying in {wait_s}s...")
+                time.sleep(wait_s)
+
+        if not loaded:
+            print(f"\nERROR: Roster table never loaded after {MAX_ATTEMPTS} attempts")
+            return None
 
         # Record which season this page shows so combine_tbl_data.py can label the data
         season = detect_season(html_content)
