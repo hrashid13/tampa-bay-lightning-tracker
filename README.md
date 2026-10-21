@@ -1,7 +1,16 @@
 # Tampa Bay Lightning Player Statistics Tracker
 
-[![Live Dashboard](https://img.shields.io/badge/Live-Dashboard-blue)](https://hrashid13.github.io/tampa-bay-lightning-tracker/)
 
+# Update as of 10/21/26: RIP to the Scraper! After almost a year the scraper has finally met a bot check!
+
+Dashboard is still up and live, it will just now not update, but currently thinking of doing an alternative.
+
+The NHL has an API for the Tampa Bay Lightning, which would be great, but it ignores the prospects, so thinking of a way to get the prospects as well!
+
+<img width="1395" height="831" alt="image" src="https://github.com/user-attachments/assets/d251a9a8-86ce-433f-b669-00fad3d0317d" />
+
+
+# Legacy 
 
 A full-stack sports analytics project that tracks Tampa Bay Lightning NHL roster players and prospects across the NHL, AHL, ECHL, OHL, European leagues, and NCAA. Stats are scraped every night, stored in MongoDB Atlas, and published as a fast, static React dashboard on GitHub Pages.
 
